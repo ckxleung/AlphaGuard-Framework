@@ -1,0 +1,28 @@
+# System Files
+.DS_Store
+Thumbs.db
+
+# Python Ecosystem
+__pycache__/
+*.py[cod]
+*.pyd
+.env
+.venv/
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# AlphaGuard Local Data Ingestion Space
+data/daily_raw_ingestion/
+*.log
+
+# Build Artifacts
+build/
+dist/
+*.egg-info/
