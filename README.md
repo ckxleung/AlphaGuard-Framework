@@ -62,7 +62,7 @@ evaluation_kernels/
 config/
   enterprise_monitoring_profiles.json
   event_routing_policy.json
-  target_55_enterprises.json
+  target_enterprises.json
 schemas/
   publication_artifact.schema.json
 templates/
@@ -119,7 +119,7 @@ normalize and provenance financial statements before invoking a kernel.
 
 The scheduled workflow in `.github/workflows/daily_telemetry_cron.yml` runs
 every day at 04:00 HKT. It validates the repository, generates a planning-only
-56-company baseline artifact, and runs the deterministic synthetic smoke test.
+56-enterprise baseline artifact, and runs the deterministic synthetic smoke test.
 The plan never claims that live collection or an audit occurred.
 
 The monitoring control plane combines three business cohorts with the four
@@ -129,8 +129,7 @@ kernels remain visible as `unavailable_modules`, while implemented kernels
 without evidence payloads are reported as skipped. See
 [`docs/MONITORING_OPERATIONS.md`](docs/MONITORING_OPERATIONS.md).
 
-The target universe currently contains 56 tickers. The configuration file name
-`target_55_enterprises.json` is retained for backward compatibility.
+The target universe currently contains 56 monitored tickers.
 
 ## Institutional Output Contract
 

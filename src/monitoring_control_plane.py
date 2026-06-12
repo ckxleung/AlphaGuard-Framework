@@ -20,7 +20,7 @@ from src.module_manifest import MODULE_SPECS
 
 
 PROFILE_CONFIG = ROOT / "config" / "enterprise_monitoring_profiles.json"
-TARGET_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+TARGET_CONFIG = ROOT / "config" / "target_enterprises.json"
 POLICY_CONFIG = ROOT / "config" / "event_routing_policy.json"
 VALID_COHORTS = frozenset(
     {

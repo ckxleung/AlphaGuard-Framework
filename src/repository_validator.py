@@ -25,7 +25,7 @@ REQUIRED_LAYERS = (
     "layer_4_strategy",
 )
 FORBIDDEN_MARKERS = ("TODO", "NotImplementedError")
-TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_enterprises.json"
 MONITORING_CONFIGS = (
     "config/enterprise_monitoring_profiles.json",
     "config/event_routing_policy.json",
@@ -96,7 +96,7 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
             )
 
     if not target_config.is_file():
-        errors.append("Missing target enterprise config: config/target_55_enterprises.json")
+        errors.append("Missing target enterprise config: config/target_enterprises.json")
     else:
         try:
             enterprise_config = json.loads(target_config.read_text(encoding="utf-8"))

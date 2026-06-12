@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-DEFAULT_TARGET_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+DEFAULT_TARGET_CONFIG = ROOT / "config" / "target_enterprises.json"
 DEFAULT_EVENT_POLICY = ROOT / "config" / "event_routing_policy.json"
 
 LAYER_KERNELS = {

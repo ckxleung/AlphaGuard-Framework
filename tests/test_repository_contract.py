@@ -74,7 +74,7 @@ class RepositoryStructureTests(unittest.TestCase):
         self.assertTrue(validate_publication_artifact(example))
 
     def test_target_enterprise_config_lists_current_unique_tickers(self) -> None:
-        config_path = ROOT / "config" / "target_55_enterprises.json"
+        config_path = ROOT / "config" / "target_enterprises.json"
         enterprise_config = json.loads(config_path.read_text(encoding="utf-8"))
         tickers = [
             ticker

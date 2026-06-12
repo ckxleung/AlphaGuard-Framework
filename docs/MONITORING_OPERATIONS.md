@@ -27,7 +27,7 @@ The 56 monitored tickers are assigned exactly once in
 
 These are business monitoring cohorts, not replacements for the four
 functional infrastructure layers. Each loaded profile is reconciled to
-`config/target_55_enterprises.json` and therefore also carries one functional
+`config/target_enterprises.json` and therefore also carries one functional
 defense layer:
 
 - `Layer_1_Technical_Telemetry`;
@@ -39,7 +39,7 @@ The cohort decides editorial priority and likely event types. The functional
 layer decides the default infrastructure lane and makes the 18-kernel
 architecture visible in every plan.
 
-The profile universe must exactly match `config/target_55_enterprises.json`.
+The profile universe must exactly match `config/target_enterprises.json`.
 Each cohort also declares preferred event types. The control plane labels an
 event as `PREFERRED`, `SECONDARY`, or `BASELINE` for alert and editorial
 prioritization; it does not suppress valid secondary events.
@@ -97,7 +97,7 @@ python3 src/monitoring_control_plane.py \
   --module-payloads examples/module_payloads.financing.synthetic.json
 ```
 
-Generate the daily 56-company routing plan:
+Generate the daily 56-enterprise routing plan:
 
 ```bash
 python3 src/monitoring_control_plane.py \
