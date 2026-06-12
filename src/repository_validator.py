@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.module_manifest import MODULE_SPECS, validate_manifest
+from src.output_standard import validate_publication_artifact
 
 
 REQUIRED_LAYERS = (
@@ -24,6 +25,13 @@ REQUIRED_LAYERS = (
 )
 FORBIDDEN_MARKERS = ("TODO", "NotImplementedError")
 TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+PUBLICATION_ASSETS = (
+    "docs/OUTPUT_STANDARD.md",
+    "schemas/publication_artifact.schema.json",
+    "templates/telemetry_note.md",
+    "templates/deep_dive_whitepaper.md",
+    "examples/publication_artifact.example.json",
+)
 
 
 def _validate_kernel_file(path: Path) -> tuple[str, ...]:
@@ -98,6 +106,20 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
                 errors.append("Target enterprise config must list exactly 55 tickers.")
             if len(configured_tickers) != len(set(configured_tickers)):
                 errors.append("Target enterprise config contains duplicate tickers.")
+
+    for relative_path in PUBLICATION_ASSETS:
+        if not (root / relative_path).is_file():
+            errors.append(f"Missing publication standard asset: {relative_path}")
+
+    publication_example = root / "examples" / "publication_artifact.example.json"
+    if publication_example.is_file():
+        try:
+            example_payload = json.loads(
+                publication_example.read_text(encoding="utf-8")
+            )
+            validate_publication_artifact(example_payload)
+        except (TypeError, ValueError, json.JSONDecodeError) as error:
+            errors.append(f"Invalid publication artifact example: {error}")
 
     return {
         "valid": not errors,

@@ -14,6 +14,7 @@ evaluation kernels are implemented:
 - an external 55-enterprise telemetry configuration;
 - an immutable registry covering module IDs 1 through 18;
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
+- a machine-verifiable institutional publication contract;
 - placeholder and structure validation;
 - a one-command pipeline entry point.
 
@@ -50,10 +51,16 @@ evaluation_kernels/
     Module_15_SCGV/
 config/
   target_55_enterprises.json
+schemas/
+  publication_artifact.schema.json
+templates/
+  telemetry_note.md
+  deep_dive_whitepaper.md
 src/
   base_auditor.py
   main_pipeline.py
   module_manifest.py
+  output_standard.py
   repository_validator.py
   telemetry_router.py
 tests/
@@ -70,6 +77,7 @@ python3 -m unittest discover -s tests -p "test_*.py"
 python3 -m src.repository_validator
 python3 -m src.main_pipeline --validate-only
 python3 src/main_pipeline.py
+python3 src/output_standard.py examples/publication_artifact.example.json
 ```
 
 Coverage verification:
@@ -90,6 +98,21 @@ The scheduled workflow in `.github/workflows/daily_telemetry_cron.yml` runs
 `config/target_55_enterprises.json`, maps each covered ticker into its assigned
 defense layer, and preserves explicit high-priority routes for critical names
 such as NVDA and AVGO.
+
+## Institutional Output Contract
+
+AlphaGuard publication is a two-file contract:
+
+1. a human-readable Markdown report created from an approved template;
+2. a machine-readable JSON sidecar containing claims, sources, timestamps,
+   scorecards, and disclosures.
+
+The canonical editorial and evidence standard is documented in
+[`docs/OUTPUT_STANDARD.md`](docs/OUTPUT_STANDARD.md). The machine schema lives
+in
+[`schemas/publication_artifact.schema.json`](schemas/publication_artifact.schema.json).
+Examples containing synthetic data are explicitly labeled and must pass
+`src/output_standard.py` before publication.
 
 ## Kernel Contract
 

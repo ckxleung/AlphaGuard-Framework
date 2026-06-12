@@ -34,3 +34,12 @@ Examples:
 - tolerance and rejection thresholds;
 - unit, integration, and adversarial fixtures;
 - proof that `execute_audit()` returns a valid institutional scorecard.
+
+For publication-related changes, also provide:
+
+- the approved document type and template;
+- timezone-aware as-of and generated-at timestamps;
+- claim classification and source references;
+- methodology references for every material claim;
+- a JSON sidecar that passes `src/output_standard.py`;
+- confirmation that synthetic data and strategy risk are disclosed.

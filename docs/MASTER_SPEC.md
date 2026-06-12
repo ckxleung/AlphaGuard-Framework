@@ -183,3 +183,23 @@ Every implemented module returns the shared required fields:
 ```
 
 Module-specific evidence is additive and cannot replace the shared contract.
+
+## Institutional Publication Contract
+
+Kernel scorecards are operational outputs. A publishable research artifact is
+a separate, higher-level contract that binds scorecards to timestamped claims,
+source references, methodology references, and disclosures.
+
+Every publication must:
+
+1. use an approved document type and Markdown template;
+2. carry a unique artifact ID and timezone-aware as-of timestamp;
+3. classify each material claim as `FACT`, `INFERENCE`, or `SCENARIO`;
+4. cite every fact to a known source;
+5. retain the original shared scorecard fields;
+6. identify synthetic data, estimates, scenarios, and backtests;
+7. pass `src/output_standard.py`.
+
+The complete specification is maintained in
+[`docs/OUTPUT_STANDARD.md`](OUTPUT_STANDARD.md). The canonical machine schema
+is `schemas/publication_artifact.schema.json`.

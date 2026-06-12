@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "artifact_id": "CAD-TN-20260612-SYNTHETIC-001",
+  "document_type": "TELEMETRY_NOTE",
+  "title": "Synthetic Supply-Chain Telemetry Note",
+  "as_of": "2026-06-12T16:00:00+08:00",
+  "generated_at": "2026-06-12T16:05:00+08:00",
+  "engine_version": "AlphaGuard 1.0.4",
+  "classification": "B2B_ENTERPRISE_AI_INFRASTRUCTURE_RISK",
+  "executive_summary": "Synthetic fixture demonstrating the AlphaGuard institutional publication contract. It is not live market research.",
+  "claims": [
+    {
+      "claim_id": "CLM-001",
+      "claim_type": "FACT",
+      "statement": "The synthetic Module_15_SCGV fixture produced a rigor score of 2.1 out of 5.0.",
+      "source_refs": [
+        "SRC-001"
+      ],
+      "methodology_refs": [
+        "Module_15_SCGV",
+        "docs/MASTER_SPEC.md"
+      ]
+    },
+    {
+      "claim_id": "CLM-002",
+      "claim_type": "INFERENCE",
+      "statement": "The synthetic result indicates elevated model risk under the dual-variance reorder-point test.",
+      "source_refs": [
+        "SRC-001"
+      ],
+      "methodology_refs": [
+        "Module_15_SCGV"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "SRC-001",
+      "title": "Synthetic AlphaGuard Publication Fixture",
+      "url": "https://github.com/ckxleung/AlphaGuard-Framework",
+      "accessed_at": "2026-06-12T15:55:00+08:00"
+    }
+  ],
+  "scorecards": [
+    {
+      "kernel_id": "Module_15_SCGV",
+      "target": "SYNTHETIC",
+      "rigor_score": 2.1,
+      "data_quality_status": "REJECTED",
+      "structured_written_feedback": "Synthetic fixture rejected because the proposed reorder point omitted lead-time variance."
+    }
+  ],
+  "disclosures": {
+    "informational_only": true,
+    "independent_research": true,
+    "derivatives_risk_disclosed": true,
+    "synthetic_data": true
+  }
+}

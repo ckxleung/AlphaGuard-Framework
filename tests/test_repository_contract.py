@@ -26,8 +26,35 @@ class RepositoryStructureTests(unittest.TestCase):
             self.assertTrue((ROOT / "evaluation_kernels" / directory).is_dir())
 
     def test_required_src_entrypoints_exist(self) -> None:
-        for filename in ("base_auditor.py", "main_pipeline.py", "telemetry_router.py"):
+        for filename in (
+            "base_auditor.py",
+            "main_pipeline.py",
+            "output_standard.py",
+            "telemetry_router.py",
+        ):
             self.assertTrue((SRC / filename).is_file(), filename)
+
+    def test_publication_standard_assets_exist_and_example_validates(self) -> None:
+        from src.output_standard import validate_publication_artifact
+
+        required_paths = (
+            ROOT / "docs" / "OUTPUT_STANDARD.md",
+            ROOT / "schemas" / "publication_artifact.schema.json",
+            ROOT / "templates" / "telemetry_note.md",
+            ROOT / "templates" / "deep_dive_whitepaper.md",
+            ROOT / "examples" / "publication_artifact.example.json",
+        )
+        for path in required_paths:
+            self.assertTrue(path.is_file(), path)
+
+        schema = json.loads(required_paths[1].read_text(encoding="utf-8"))
+        self.assertEqual(
+            schema["$id"],
+            "https://github.com/ckxleung/AlphaGuard-Framework/"
+            "schemas/publication_artifact.schema.json",
+        )
+        example = json.loads(required_paths[4].read_text(encoding="utf-8"))
+        self.assertTrue(validate_publication_artifact(example))
 
     def test_target_enterprise_config_lists_fifty_five_unique_tickers(self) -> None:
         config_path = ROOT / "config" / "target_55_enterprises.json"
@@ -147,6 +174,11 @@ class StandaloneScriptTests(unittest.TestCase):
         commands = (
             [sys.executable, str(SRC / "base_auditor.py")],
             [sys.executable, str(SRC / "module_manifest.py"), "--module", "12"],
+            [
+                sys.executable,
+                str(SRC / "output_standard.py"),
+                str(ROOT / "examples" / "publication_artifact.example.json"),
+            ],
             [sys.executable, str(SRC / "repository_validator.py")],
             [sys.executable, str(SRC / "main_pipeline.py"), "--validate-only"],
         )
