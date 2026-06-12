@@ -32,12 +32,12 @@ class RepositoryStructureTests(unittest.TestCase):
         self.assertEqual(len(set(module_ids)), 18)
         self.assertEqual(set(module_ids), set(range(1, 19)))
 
-    def test_unprovided_module_twelve_is_not_marked_implemented(self) -> None:
+    def test_module_twelve_is_registered_in_layer_four(self) -> None:
         from src.module_manifest import get_module_spec
 
         module = get_module_spec(12)
-        self.assertEqual(module.status, "SPEC_REQUIRED")
-        self.assertFalse(module.implementation_path)
+        self.assertEqual(module.code, "IRTA")
+        self.assertEqual(module.layer, "layer_4_strategy")
 
 
 class BaseAuditorContractTests(unittest.TestCase):
