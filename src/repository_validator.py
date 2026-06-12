@@ -26,6 +26,10 @@ REQUIRED_LAYERS = (
 )
 FORBIDDEN_MARKERS = ("TODO", "NotImplementedError")
 TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+MONITORING_CONFIGS = (
+    "config/enterprise_monitoring_profiles.json",
+    "config/event_routing_policy.json",
+)
 PUBLICATION_ASSETS = (
     "docs/OUTPUT_STANDARD.md",
     "docs/TEMPORAL_STANDARD.md",
@@ -113,6 +117,25 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
     for relative_path in PUBLICATION_ASSETS:
         if not (root / relative_path).is_file():
             errors.append(f"Missing publication standard asset: {relative_path}")
+
+    for relative_path in MONITORING_CONFIGS:
+        if not (root / relative_path).is_file():
+            errors.append(f"Missing monitoring configuration: {relative_path}")
+
+    if not errors:
+        try:
+            from src.monitoring_control_plane import (
+                load_enterprise_profiles,
+                load_routing_policy,
+            )
+
+            load_enterprise_profiles(
+                root / "config" / "enterprise_monitoring_profiles.json",
+                target_config,
+            )
+            load_routing_policy(root / "config" / "event_routing_policy.json")
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
+            errors.append(f"Invalid monitoring configuration: {error}")
 
     publication_example = root / "examples" / "publication_artifact.example.json"
     if publication_example.is_file():

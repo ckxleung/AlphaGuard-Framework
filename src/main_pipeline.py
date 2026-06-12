@@ -60,15 +60,28 @@ def _load_auditor(implementation_path: str, class_name: str) -> BaseAuditor:
 def run_pipeline(
     ai_output: dict[str, Any],
     ground_truth: dict[str, Any],
+    selected_codes: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
-    """Execute every implemented kernel and validate every scorecard."""
+    """Execute selected implemented kernels against one shared payload."""
     validation = validate_repository()
     if not validation["valid"]:
         raise RuntimeError("Repository validation failed before pipeline execution.")
 
+    requested_codes = None if selected_codes is None else set(selected_codes)
+    known_codes = {specification.code for specification in MODULE_SPECS}
+    if requested_codes is not None:
+        unknown_codes = requested_codes.difference(known_codes)
+        if unknown_codes:
+            raise ValueError(
+                "Unknown selected module code(s): "
+                + ", ".join(sorted(unknown_codes))
+            )
+
     results: dict[str, Any] = {}
     for specification in MODULE_SPECS:
         if specification.status != "IMPLEMENTED":
+            continue
+        if requested_codes is not None and specification.code not in requested_codes:
             continue
         auditor = _load_auditor(
             specification.implementation_path,
@@ -76,6 +89,60 @@ def run_pipeline(
         )
         scorecard = auditor.execute_audit(dict(ai_output), dict(ground_truth))
         results[specification.code] = BaseAuditor.validate_scorecard(scorecard)
+
+    return {
+        "executed_modules": len(results),
+        "results": results,
+        "repository_status": validation["module_counts"],
+    }
+
+
+def run_module_payloads(
+    module_payloads: dict[str, Any],
+    *,
+    selected_codes: tuple[str, ...] | None = None,
+) -> dict[str, Any]:
+    """Execute each selected kernel with its own immutable input payload."""
+    if not isinstance(module_payloads, dict):
+        raise TypeError("module_payloads must be an object keyed by module code.")
+    validation = validate_repository()
+    if not validation["valid"]:
+        raise RuntimeError("Repository validation failed before pipeline execution.")
+
+    specifications = {specification.code: specification for specification in MODULE_SPECS}
+    requested_codes = (
+        tuple(module_payloads)
+        if selected_codes is None
+        else tuple(selected_codes)
+    )
+    if len(requested_codes) != len(set(requested_codes)):
+        raise ValueError("selected_codes cannot contain duplicates.")
+
+    results: dict[str, Any] = {}
+    for code in requested_codes:
+        specification = specifications.get(code)
+        if specification is None:
+            raise ValueError(f"Unknown selected module code: {code}")
+        if specification.status != "IMPLEMENTED":
+            continue
+        payload = module_payloads.get(code)
+        if payload is None:
+            continue
+        if not isinstance(payload, dict):
+            raise TypeError(f"module_payloads.{code} must be an object.")
+        ai_output = payload.get("ai_output")
+        ground_truth = payload.get("ground_truth")
+        if not isinstance(ai_output, dict) or not isinstance(ground_truth, dict):
+            raise TypeError(
+                f"module_payloads.{code} must contain ai_output and ground_truth objects."
+            )
+
+        auditor = _load_auditor(
+            specification.implementation_path,
+            specification.class_name,
+        )
+        scorecard = auditor.execute_audit(dict(ai_output), dict(ground_truth))
+        results[code] = BaseAuditor.validate_scorecard(scorecard)
 
     return {
         "executed_modules": len(results),

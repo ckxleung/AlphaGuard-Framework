@@ -1,0 +1,10 @@
+{
+  "event_id": "evt-example-financing-nvda-20260613",
+  "ticker": "NVDA",
+  "event_type": "FINANCING_MA",
+  "observed_at": "2026-06-13T00:00:00Z",
+  "evidence_refs": [
+    "SYNTHETIC-FINANCING-DEMO"
+  ],
+  "data_classification": "SYNTHETIC"
+}

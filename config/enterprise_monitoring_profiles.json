@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "cohorts": {
+    "FOUNDATIONAL_API": {
+      "description": "Foundation-model, cloud, search, and API platform operators.",
+      "preferred_event_types": [
+        "API_CHANGE",
+        "MODEL_RELEASE",
+        "REGULATORY_UPDATE"
+      ],
+      "tickers": [
+        "MSFT",
+        "GOOGL",
+        "META",
+        "AMZN",
+        "BIDU",
+        "0700.HK",
+        "9988.HK",
+        "9888.HK",
+        "0020.HK",
+        "002230.SZ"
+      ]
+    },
+    "ENTERPRISE_FINTECH_AGENT": {
+      "description": "Enterprise software, applied AI, fintech, autonomous systems, and artifact-producing agents.",
+      "preferred_event_types": [
+        "ARTIFACT_RELEASE",
+        "EARNINGS_RELEASE",
+        "FINANCING_MA",
+        "REGULATORY_UPDATE",
+        "ML_MODEL_UPDATE"
+      ],
+      "tickers": [
+        "PLTR",
+        "NOW",
+        "ORCL",
+        "1024.HK",
+        "1357.HK",
+        "688111.SH",
+        "688041.SH",
+        "SMCI",
+        "TSM",
+        "AAPL",
+        "TSLA",
+        "MBLY",
+        "2026.HK",
+        "9868.HK",
+        "EH"
+      ]
+    },
+    "COMPUTE_INFRASTRUCTURE": {
+      "description": "Semiconductor, networking, data-center, optical, packaging, and compute infrastructure operators.",
+      "preferred_event_types": [
+        "SUPPLY_CHAIN_DISRUPTION",
+        "EARNINGS_RELEASE",
+        "FINANCING_MA",
+        "REGULATORY_UPDATE"
+      ],
+      "tickers": [
+        "NVDA",
+        "AMD",
+        "AVGO",
+        "MRVL",
+        "ASML",
+        "VRT",
+        "CRWV",
+        "MU",
+        "ARM",
+        "ANET",
+        "QCOM",
+        "INTC",
+        "0992.HK",
+        "0522.HK",
+        "9698.HK",
+        "9616.HK",
+        "1810.HK",
+        "601138.SS",
+        "300308.SZ",
+        "603083.SS",
+        "300502.SZ",
+        "000977.SZ",
+        "002837.SZ",
+        "688256.SH",
+        "603019.SS",
+        "600584.SS",
+        "688017.SH",
+        "002415.SZ",
+        "300451.SZ",
+        "002050.SZ"
+      ]
+    }
+  }
+}

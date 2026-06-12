@@ -1,0 +1,52 @@
+{
+  "IRTA": {
+    "data_classification": "SYNTHETIC",
+    "evidence_refs": [
+      "SYNTHETIC-FINANCING-DEMO"
+    ],
+    "ai_output": {
+      "revenue_forecast": [
+        400.0,
+        450.0,
+        500.0,
+        550.0,
+        600.0
+      ],
+      "investment_thesis": "Synthetic demonstration only."
+    },
+    "ground_truth": {
+      "current_capacity": 100.0,
+      "capex_additions": [
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        10.0
+      ],
+      "capital_efficiency": 2.0,
+      "max_utilization": 0.9,
+      "blended_asp": 5.0
+    }
+  },
+  "IBDV": {
+    "data_classification": "SYNTHETIC",
+    "evidence_refs": [
+      "SYNTHETIC-FINANCING-DEMO"
+    ],
+    "ai_output": {
+      "calculated_enterprise_value": 168000000000
+    },
+    "ground_truth": {
+      "equity_value": 150000000000,
+      "total_debt": 25000000000,
+      "cash_and_equivalents": 12000000000,
+      "preferred_stock": 500000000,
+      "non_controlling_interests": 4500000000,
+      "reported_enterprise_value": 168000000000,
+      "currency": "USD",
+      "equity_value_basis": "SYNTHETIC_MARKET_CAPITALIZATION",
+      "source_id": "SYNTHETIC-FINANCING-DEMO",
+      "valuation_date": "2026-06-13"
+    }
+  }
+}

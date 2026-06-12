@@ -20,6 +20,9 @@ htmlcov/
 
 # AlphaGuard Local Data Ingestion Space
 data/daily_raw_ingestion/
+outputs/*.json
+outputs/*.md
+!outputs/README.md
 *.log
 
 # Build Artifacts

@@ -1,5 +1,8 @@
+# Supported runtime: Python >=3.10,<3.14
 yfinance>=0.2.38
-litellm>=1.35.0
+litellm>=1.83.10
+aiohttp>=3.14.0
+python-dotenv>=1.2.2
 openpyxl>=3.1.2
 python-pptx>=0.6.23
 numpy>=1.26.0

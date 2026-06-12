@@ -31,10 +31,24 @@ class RepositoryStructureTests(unittest.TestCase):
             "kernel_spec_catalog.py",
             "main_pipeline.py",
             "market_clock.py",
+            "monitoring_control_plane.py",
             "output_standard.py",
             "telemetry_router.py",
         ):
             self.assertTrue((SRC / filename).is_file(), filename)
+
+    def test_monitoring_control_plane_assets_exist(self) -> None:
+        required_paths = (
+            ROOT / "config" / "enterprise_monitoring_profiles.json",
+            ROOT / "config" / "event_routing_policy.json",
+            ROOT / "docs" / "MONITORING_OPERATIONS.md",
+            ROOT / "examples" / "monitoring_event.example.json",
+            ROOT / "examples" / "module_payloads.financing.synthetic.json",
+            ROOT / "data" / "README.md",
+            ROOT / "outputs" / "README.md",
+        )
+        for path in required_paths:
+            self.assertTrue(path.is_file(), path)
 
     def test_publication_standard_assets_exist_and_example_validates(self) -> None:
         from src.output_standard import validate_publication_artifact

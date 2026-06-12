@@ -26,5 +26,23 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: Execute autonomous forensic audit pipeline
+      - name: Validate repository contracts
+        run: python -m src.repository_validator
+
+      - name: Generate planning-only 55-enterprise baseline
+        run: |
+          mkdir -p outputs
+          python src/monitoring_control_plane.py \
+            --portfolio-baseline \
+            > outputs/portfolio_baseline_plan.json
+
+      - name: Run deterministic synthetic smoke audit
         run: python src/main_pipeline.py
+
+      - name: Upload routing plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: alphaguard-portfolio-baseline-plan
+          path: outputs/portfolio_baseline_plan.json
+          if-no-files-found: error
+          retention-days: 14

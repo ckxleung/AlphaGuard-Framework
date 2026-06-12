@@ -3,6 +3,9 @@
 AlphaGuard is a deterministic evaluation framework for auditing AI-generated
 financial, compliance, telemetry, and strategy artifacts.
 
+Supported runtime: Python 3.10 through 3.13. Python 3.14 is not currently
+supported because the secured LiteLLM dependency line declares `<3.14`.
+
 ## Current Repository State
 
 This repository contains the engineering contract required before individual
@@ -16,6 +19,8 @@ evaluation kernels are implemented:
 - a machine-readable specification catalog covering every module's inputs,
   deterministic rules, tolerance policy, rejection conditions, outputs, and
   data boundary;
+- a cohort and event-driven monitoring control plane for the 55-enterprise
+  universe;
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
 - a DST-aware three-market timestamp matrix;
 - a machine-verifiable institutional publication contract;
@@ -55,6 +60,8 @@ evaluation_kernels/
     Module_13_BMAE/
     Module_15_SCGV/
 config/
+  enterprise_monitoring_profiles.json
+  event_routing_policy.json
   target_55_enterprises.json
 schemas/
   publication_artifact.schema.json
@@ -66,6 +73,7 @@ src/
   kernel_spec_catalog.py
   main_pipeline.py
   market_clock.py
+  monitoring_control_plane.py
   module_manifest.py
   output_standard.py
   repository_validator.py
@@ -84,6 +92,8 @@ python3 -m unittest discover -s tests -p "test_*.py"
 python3 -m src.repository_validator
 python3 -m src.main_pipeline --validate-only
 python3 src/main_pipeline.py
+python3 src/monitoring_control_plane.py --event examples/monitoring_event.example.json
+python3 src/monitoring_control_plane.py --portfolio-baseline
 python3 src/output_standard.py examples/publication_artifact.example.json
 ```
 
@@ -108,10 +118,16 @@ normalize and provenance financial statements before invoking a kernel.
 ## Daily Telemetry Loop
 
 The scheduled workflow in `.github/workflows/daily_telemetry_cron.yml` runs
-`python src/main_pipeline.py` every day at 04:00 HKT. The router reads
-`config/target_55_enterprises.json`, maps each covered ticker into its assigned
-defense layer, and preserves explicit high-priority routes for critical names
-such as NVDA and AVGO.
+every day at 04:00 HKT. It validates the repository, generates a planning-only
+55-company baseline artifact, and runs the deterministic synthetic smoke test.
+The plan never claims that live collection or an audit occurred.
+
+The monitoring control plane uses three cohorts and a versioned event policy.
+Daily baseline routes exactly two modules; event-driven peaks route between
+three and five. Selected but unimplemented kernels remain visible as
+`unavailable_modules`, while implemented kernels without evidence payloads are
+reported as skipped. See
+[`docs/MONITORING_OPERATIONS.md`](docs/MONITORING_OPERATIONS.md).
 
 ## Institutional Output Contract
 
@@ -162,3 +178,10 @@ and implementation path have all been reviewed and tested.
 
 `SPECIFIED` means the module has a complete entry in
 `src/kernel_spec_catalog.py`; it does not mean executable kernel code exists.
+
+## Open-Core Security Boundary
+
+AlphaGuard contains no production API credentials, licensed feeds, or
+confidential institutional datasets. Live connectors must be supplied
+separately with explicit provenance and secret management. This repository does
+not claim that undisclosed private-cloud infrastructure is already deployed.

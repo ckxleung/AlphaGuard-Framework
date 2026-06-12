@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "daily_baseline_modules": [
+    "TLAB",
+    "BMAE"
+  ],
+  "event_routes": {
+    "API_CHANGE": [
+      "TLAB",
+      "SFRA",
+      "OAPE"
+    ],
+    "MODEL_RELEASE": [
+      "TLAB",
+      "SFRA",
+      "FRTE"
+    ],
+    "EARNINGS_RELEASE": [
+      "FRTE",
+      "CFIA",
+      "CVIB",
+      "IRTA",
+      "IBDV"
+    ],
+    "FINANCING_MA": [
+      "IBDV",
+      "CVIB",
+      "IRTA"
+    ],
+    "REGULATORY_UPDATE": [
+      "ERCA",
+      "FRTE",
+      "BLSB"
+    ],
+    "SUPPLY_CHAIN_DISRUPTION": [
+      "APAC",
+      "SCGV",
+      "IRTA",
+      "BMAE"
+    ],
+    "ARTIFACT_RELEASE": [
+      "OAPE",
+      "AMDG",
+      "FOAS",
+      "BLSB"
+    ],
+    "ML_MODEL_UPDATE": [
+      "AMWE",
+      "TLAB",
+      "BMAE"
+    ]
+  }
+}
