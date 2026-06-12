@@ -209,20 +209,25 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
 
 def run_daily_smoke(
     ticker: str = "NVDA",
+    market_event: str | None = None,
     observed_at: datetime | None = None,
 ) -> dict[str, Any]:
-    route = route_ticker(ticker)
+    route = route_ticker(ticker, market_event=market_event)
     ai_output, ground_truth = _daily_smoke_inputs()
-    pipeline_report = run_pipeline(ai_output, ground_truth)
-    timestamp_matrix = generate_institutional_timestamp_matrix(observed_at)
-
-    route_codes = {
+    route_codes = tuple(
         kernel.replace("Module_", "").split("_", 1)[1]
         for kernel in route["triggered_kernels"]
-    }
+    )
+    pipeline_report = run_pipeline(
+        ai_output,
+        ground_truth,
+        selected_codes=route_codes,
+    )
+    timestamp_matrix = generate_institutional_timestamp_matrix(observed_at)
+
     scorecards = []
     unavailable_kernels = []
-    for code in sorted(route_codes):
+    for code in route_codes:
         result = pipeline_report["results"].get(code)
         if result is None:
             unavailable_kernels.append(_kernel_identifier(code))
@@ -253,9 +258,12 @@ def run_daily_smoke(
     }
 
 
-def print_daily_smoke_report(ticker: str = "NVDA") -> None:
+def print_daily_smoke_report(
+    ticker: str = "NVDA",
+    market_event: str | None = None,
+) -> None:
     observed_at = datetime.now(timezone.utc)
-    route = route_ticker(ticker)
+    route = route_ticker(ticker, market_event=market_event)
     utc_log_time = observed_at.isoformat(timespec="seconds").replace("+00:00", "Z")
     print(DIVIDER)
     print(BANNER)
@@ -272,7 +280,11 @@ def print_daily_smoke_report(ticker: str = "NVDA") -> None:
     )
     print(
         json.dumps(
-            run_daily_smoke(ticker, observed_at=observed_at),
+            run_daily_smoke(
+                ticker,
+                market_event=market_event,
+                observed_at=observed_at,
+            ),
             indent=2,
             ensure_ascii=False,
         )
@@ -284,6 +296,8 @@ def main() -> int:  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ai-output", type=Path)
     parser.add_argument("--ground-truth", type=Path)
+    parser.add_argument("--ticker", default="NVDA")
+    parser.add_argument("--event", dest="market_event")
     parser.add_argument(
         "--validate-only",
         action="store_true",
@@ -297,7 +311,7 @@ def main() -> int:  # pragma: no cover
         return 0 if report["valid"] else 1
 
     if not arguments.ai_output or not arguments.ground_truth:
-        print_daily_smoke_report("NVDA")
+        print_daily_smoke_report(arguments.ticker, market_event=arguments.market_event)
         return 0
 
     report = run_pipeline(

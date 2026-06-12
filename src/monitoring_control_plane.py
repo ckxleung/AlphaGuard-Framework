@@ -68,6 +68,16 @@ def _parse_timestamp(value: Any) -> str:
     return parsed.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
+def _ticker_aliases(ticker: str) -> tuple[str, ...]:
+    normalized = str(ticker).strip().upper()
+    aliases = [normalized]
+    if normalized.endswith(".SH"):
+        aliases.append(normalized[:-3] + ".SS")
+    elif normalized.endswith(".SS"):
+        aliases.append(normalized[:-3] + ".SH")
+    return tuple(dict.fromkeys(aliases))
+
+
 def load_enterprise_profiles(
     profile_path: Path = PROFILE_CONFIG,
     target_path: Path = TARGET_CONFIG,
@@ -119,16 +129,22 @@ def load_enterprise_profiles(
                 "preferred_event_types": normalized_event_types,
             }
 
-    target_tickers = {
-        str(ticker).strip().upper()
-        for tickers in target_config.values()
-        if isinstance(tickers, list)
-        for ticker in tickers
-    }
+    target_layers: dict[str, str] = {}
+    target_tickers = set()
+    for layer_name, tickers in target_config.items():
+        if not isinstance(tickers, list):
+            continue
+        for raw_ticker in tickers:
+            ticker = str(raw_ticker).strip().upper()
+            target_tickers.add(ticker)
+            for alias in _ticker_aliases(ticker):
+                target_layers[alias] = str(layer_name)
     if set(profiles) != target_tickers or len(profiles) != 55:
         raise ValueError(
             "enterprise monitoring profiles must exactly match the 55 target tickers."
         )
+    for ticker, profile in profiles.items():
+        profile["functional_layer"] = target_layers[ticker]
     return profiles
 
 
@@ -227,6 +243,7 @@ def plan_monitoring_event(event: Mapping[str, Any]) -> dict[str, Any]:
         **validated,
         "cohort": profile["cohort"],
         "cohort_description": profile["cohort_description"],
+        "target_infrastructure_layer": profile["functional_layer"],
         "cohort_event_priority": (
             "BASELINE"
             if validated["event_type"] == "DAILY_BASELINE"

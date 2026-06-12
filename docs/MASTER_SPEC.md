@@ -54,6 +54,11 @@ Source examples are treated as design notes, not production code. Silent file
 fallbacks, raw keyword-only grading, floating-point ledger reconciliation, live
 unrecorded lookups, and inconsistent status labels are explicitly excluded.
 
+The four functional layers are the kernel architecture. The monitoring control
+plane may additionally assign targets to commercial cohorts such as
+`FOUNDATIONAL_API`, `ENTERPRISE_FINTECH_AGENT`, and `COMPUTE_INFRASTRUCTURE`;
+those cohorts do not change canonical module IDs or layer ownership.
+
 ## Module 01 FRTE
 
 **Purpose:** Compare equivalent prior- and current-period filing sections and

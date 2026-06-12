@@ -5,12 +5,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 DEFAULT_TARGET_CONFIG = ROOT / "config" / "target_55_enterprises.json"
+DEFAULT_EVENT_POLICY = ROOT / "config" / "event_routing_policy.json"
 
 LAYER_KERNELS = {
     "Layer_1_Technical_Telemetry": ("Module_05_SFRA", "Module_06_TLAB", "Module_10_OAPE"),
@@ -24,6 +28,17 @@ LAYER_PRIORITIES = {
     "Layer_2_Quantitative_Valuation": "VALUATION_INTEGRITY_SURVEILLANCE",
     "Layer_3_Regulatory_Compliance": "REGULATORY_COMPLIANCE_SURVEILLANCE",
     "Layer_4_Institutional_Strategy": "INSTITUTIONAL_STRATEGY_SURVEILLANCE",
+}
+EVENT_PRIORITIES = {
+    "API_CHANGE": "TECHNICAL_BREAKING_CHANGE_ALARM",
+    "MODEL_RELEASE": "MODEL_RELEASE_TELEMETRY_ALARM",
+    "EARNINGS_RELEASE": "CRITICAL_ALPHA_CAPTURE",
+    "FINANCING_MA": "CRITICAL_DEAL_VALIDATION",
+    "REGULATORY_UPDATE": "HIGH_COMPLIANCE_ALARM",
+    "REGULATORY_CHANGE": "HIGH_COMPLIANCE_ALARM",
+    "SUPPLY_CHAIN_DISRUPTION": "SUPPLY_CHAIN_ALPHA_CAPTURE",
+    "ARTIFACT_RELEASE": "INSTITUTIONAL_ARTIFACT_REVIEW",
+    "ML_MODEL_UPDATE": "MODEL_VALIDATION_ALARM",
 }
 
 
@@ -68,8 +83,25 @@ class TelemetryRouter:
         telemetry_hook="GENERIC_RESEARCH_THESIS_REVIEW",
     )
 
-    def __init__(self, config_path: Path | str = DEFAULT_TARGET_CONFIG) -> None:
-        self._enterprise_layers = self._load_enterprise_layers(Path(config_path))
+    def __init__(
+        self,
+        config_path: Path | str = DEFAULT_TARGET_CONFIG,
+        event_policy_path: Path | str = DEFAULT_EVENT_POLICY,
+    ) -> None:
+        target_path = Path(config_path)
+        self._enterprise_layers = self._load_enterprise_layers(target_path)
+        self._canonical_aliases = self._load_canonical_aliases(target_path)
+        self._event_routes = self._load_event_routes(Path(event_policy_path))
+
+    @staticmethod
+    def _ticker_aliases(ticker: str) -> tuple[str, ...]:
+        normalized = str(ticker).strip().upper()
+        aliases = [normalized]
+        if normalized.endswith(".SH"):
+            aliases.append(normalized[:-3] + ".SS")
+        elif normalized.endswith(".SS"):
+            aliases.append(normalized[:-3] + ".SH")
+        return tuple(dict.fromkeys(aliases))
 
     @staticmethod
     def _load_enterprise_layers(config_path: Path) -> dict[str, str]:
@@ -88,27 +120,100 @@ class TelemetryRouter:
                 raise ValueError(f"Layer {layer_name} must define a non-empty ticker list.")
 
             for ticker in tickers:
-                normalized = str(ticker).strip().upper()
+                aliases = TelemetryRouter._ticker_aliases(str(ticker))
+                normalized = aliases[0]
                 if not normalized:
                     raise ValueError(f"Layer {layer_name} contains a blank ticker.")
-                previous_layer = enterprise_layers.get(normalized)
-                if previous_layer and previous_layer != layer_name:
-                    raise ValueError(
-                        f"Ticker {normalized} is assigned to both "
-                        f"{previous_layer} and {layer_name}."
-                    )
-                enterprise_layers[normalized] = layer_name
+                for alias in aliases:
+                    previous_layer = enterprise_layers.get(alias)
+                    if previous_layer and previous_layer != layer_name:
+                        raise ValueError(
+                            f"Ticker {alias} is assigned to both "
+                            f"{previous_layer} and {layer_name}."
+                        )
+                    enterprise_layers[alias] = layer_name
 
-        if len(enterprise_layers) != 55:
+        canonical_tickers = {
+            str(ticker).strip().upper()
+            for tickers in raw_config.values()
+            for ticker in tickers
+        }
+        if len(canonical_tickers) != 55:
             raise ValueError(
                 "target enterprise config must contain exactly 55 unique tickers."
             )
         return enterprise_layers
 
-    def route(self, ticker: str) -> dict:
-        normalized = str(ticker).strip().upper()
+    @staticmethod
+    def _load_event_routes(policy_path: Path) -> dict[str, tuple[str, ...]]:
+        if not policy_path.is_file():
+            raise FileNotFoundError(f"Missing event routing policy: {policy_path}")
+        payload = json.loads(policy_path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError("event routing policy must be a JSON object.")
+        raw_routes = payload.get("event_routes")
+        if not isinstance(raw_routes, dict) or not raw_routes:
+            raise ValueError("event_routes must be a non-empty object.")
+        event_routes: dict[str, tuple[str, ...]] = {}
+        for event_type, raw_codes in raw_routes.items():
+            if not isinstance(raw_codes, list) or not raw_codes:
+                raise ValueError(f"event route {event_type} must contain modules.")
+            event_routes[str(event_type).strip().upper()] = tuple(
+                _module_identifier(str(code).strip().upper()) for code in raw_codes
+            )
+        if "REGULATORY_UPDATE" in event_routes:
+            event_routes["REGULATORY_CHANGE"] = event_routes["REGULATORY_UPDATE"]
+        return event_routes
+
+    @staticmethod
+    def _load_canonical_aliases(config_path: Path) -> dict[str, str]:
+        raw_config = json.loads(config_path.read_text(encoding="utf-8"))
+        aliases: dict[str, str] = {}
+        for tickers in raw_config.values():
+            if not isinstance(tickers, list):
+                continue
+            for raw_ticker in tickers:
+                canonical = str(raw_ticker).strip().upper()
+                for alias in TelemetryRouter._ticker_aliases(canonical):
+                    aliases[alias] = canonical
+        return aliases
+
+    def _canonical_ticker(self, ticker: str) -> str:
+        for alias in self._ticker_aliases(ticker):
+            if alias in self._enterprise_layers:
+                return self._canonical_aliases.get(alias, alias)
+        return self._ticker_aliases(ticker)[0]
+
+    def route(self, ticker: str, market_event: str | None = None) -> dict:
+        normalized = self._canonical_ticker(ticker)
         if not normalized:
             raise ValueError("ticker must be a non-empty string.")
+
+        event_type = (
+            None
+            if market_event is None
+            else str(market_event).strip().upper()
+        )
+        if event_type:
+            event_modules = self._event_routes.get(event_type)
+            if event_modules is None:
+                raise ValueError(f"Unknown market_event: {market_event}")
+            layer = self._enterprise_layers.get(
+                normalized,
+                self._DEFAULT_ROUTE.target_infrastructure_layer,
+            )
+            priority = EVENT_PRIORITIES.get(event_type, "EVENT_DRIVEN_SURVEILLANCE")
+            spec = RoutingSpec(
+                ticker=normalized,
+                target_infrastructure_layer=layer,
+                triggered_kernels=event_modules,
+                priority_level=priority,
+                telemetry_hook=f"EXEC_{normalized}_{event_type}",
+            )
+            payload = asdict(spec)
+            payload["triggered_kernels"] = list(spec.triggered_kernels)
+            payload["market_event"] = event_type
+            return payload
 
         spec = self._ROUTES.get(normalized)
         if spec is None:
@@ -131,18 +236,35 @@ class TelemetryRouter:
                 )
         payload = asdict(spec)
         payload["triggered_kernels"] = list(spec.triggered_kernels)
+        payload["market_event"] = "ROUTINE"
         return payload
 
 
-def route_ticker(ticker: str) -> dict:
-    return TelemetryRouter().route(ticker)
+def _module_identifier(code: str) -> str:
+    from src.module_manifest import MODULE_SPECS
+
+    for specification in MODULE_SPECS:
+        if specification.code == code:
+            return f"Module_{specification.module_id:02d}_{code}"
+    raise ValueError(f"Unknown module code in event policy: {code}")
+
+
+def route_ticker(ticker: str, market_event: str | None = None) -> dict:
+    return TelemetryRouter().route(ticker, market_event=market_event)
 
 
 def main() -> int:  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("ticker", nargs="?", default="NVDA")
+    parser.add_argument("--event", dest="market_event")
     arguments = parser.parse_args()
-    print(json.dumps(route_ticker(arguments.ticker), indent=2, ensure_ascii=False))
+    print(
+        json.dumps(
+            route_ticker(arguments.ticker, market_event=arguments.market_event),
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
     return 0
 
 

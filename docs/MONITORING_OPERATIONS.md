@@ -25,6 +25,20 @@ The 55 monitored tickers are assigned exactly once in
 - `ENTERPRISE_FINTECH_AGENT`
 - `COMPUTE_INFRASTRUCTURE`
 
+These are business monitoring cohorts, not replacements for the four
+functional infrastructure layers. Each loaded profile is reconciled to
+`config/target_55_enterprises.json` and therefore also carries one functional
+defense layer:
+
+- `Layer_1_Technical_Telemetry`;
+- `Layer_2_Quantitative_Valuation`;
+- `Layer_3_Regulatory_Compliance`;
+- `Layer_4_Institutional_Strategy`.
+
+The cohort decides editorial priority and likely event types. The functional
+layer decides the default infrastructure lane and makes the 18-kernel
+architecture visible in every plan.
+
 The profile universe must exactly match `config/target_55_enterprises.json`.
 Each cohort also declares preferred event types. The control plane labels an
 event as `PREFERRED`, `SECONDARY`, or `BASELINE` for alert and editorial
@@ -90,6 +104,15 @@ python3 src/monitoring_control_plane.py \
   --portfolio-baseline \
   --observed-at 2026-06-13T00:00:00Z
 ```
+
+Run the event-aware synthetic smoke pipeline without live market ingestion:
+
+```bash
+python3 src/main_pipeline.py --ticker NVDA --event earnings_release
+```
+
+This command preserves event policy order, executes only implemented selected
+kernels, and discloses unimplemented selected kernels in `unavailable_kernels`.
 
 ## Publication Gate
 

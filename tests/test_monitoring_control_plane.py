@@ -27,6 +27,14 @@ class MonitoringPolicyTests(unittest.TestCase):
                 "COMPUTE_INFRASTRUCTURE",
             },
         )
+        self.assertEqual(
+            profiles["NVDA"]["functional_layer"],
+            "Layer_4_Institutional_Strategy",
+        )
+        self.assertEqual(
+            profiles["MSFT"]["functional_layer"],
+            "Layer_1_Technical_Telemetry",
+        )
 
     def test_daily_baseline_selects_exactly_two_modules(self) -> None:
         from src.monitoring_control_plane import plan_monitoring_event
@@ -43,6 +51,10 @@ class MonitoringPolicyTests(unittest.TestCase):
         )
 
         self.assertEqual(plan["selected_modules"], ["TLAB", "BMAE"])
+        self.assertEqual(
+            plan["target_infrastructure_layer"],
+            "Layer_1_Technical_Telemetry",
+        )
         self.assertEqual(plan["executable_modules"], ["BMAE"])
         self.assertEqual(plan["unavailable_modules"], ["TLAB"])
         self.assertFalse(plan["publication_eligible"])

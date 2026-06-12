@@ -122,11 +122,11 @@ every day at 04:00 HKT. It validates the repository, generates a planning-only
 55-company baseline artifact, and runs the deterministic synthetic smoke test.
 The plan never claims that live collection or an audit occurred.
 
-The monitoring control plane uses three cohorts and a versioned event policy.
-Daily baseline routes exactly two modules; event-driven peaks route between
-three and five. Selected but unimplemented kernels remain visible as
-`unavailable_modules`, while implemented kernels without evidence payloads are
-reported as skipped. See
+The monitoring control plane combines three business cohorts with the four
+functional infrastructure layers. Daily baseline routes exactly two modules;
+event-driven peaks route between three and five. Selected but unimplemented
+kernels remain visible as `unavailable_modules`, while implemented kernels
+without evidence payloads are reported as skipped. See
 [`docs/MONITORING_OPERATIONS.md`](docs/MONITORING_OPERATIONS.md).
 
 ## Institutional Output Contract

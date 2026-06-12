@@ -57,6 +57,52 @@ class TelemetryRouterTests(unittest.TestCase):
         )
         self.assertEqual(route["priority_level"], "REGULATORY_COMPLIANCE_SURVEILLANCE")
 
+    def test_event_route_uses_authoritative_policy_modules(self) -> None:
+        route = route_ticker("NVDA", market_event="earnings_release")
+
+        self.assertEqual(route["ticker"], "NVDA")
+        self.assertEqual(route["market_event"], "EARNINGS_RELEASE")
+        self.assertEqual(route["priority_level"], "CRITICAL_ALPHA_CAPTURE")
+        self.assertEqual(
+            route["triggered_kernels"],
+            [
+                "Module_01_FRTE",
+                "Module_14_CFIA",
+                "Module_11_CVIB",
+                "Module_12_IRTA",
+                "Module_18_IBDV",
+            ],
+        )
+
+    def test_supply_chain_event_routes_to_strategy_and_supply_chain_stack(self) -> None:
+        route = route_ticker("300308.SZ", market_event="supply_chain_disruption")
+
+        self.assertEqual(
+            route["target_infrastructure_layer"],
+            "Layer_4_Institutional_Strategy",
+        )
+        self.assertEqual(route["priority_level"], "SUPPLY_CHAIN_ALPHA_CAPTURE")
+        self.assertEqual(
+            route["triggered_kernels"],
+            [
+                "Module_02_APAC",
+                "Module_15_SCGV",
+                "Module_12_IRTA",
+                "Module_13_BMAE",
+            ],
+        )
+
+    def test_sh_and_ss_suffixes_are_normalized_against_target_universe(self) -> None:
+        route_from_sh = route_ticker("603083.SH")
+        route_from_ss = route_ticker("603083.SS")
+
+        self.assertEqual(route_from_sh["ticker"], "603083.SS")
+        self.assertEqual(route_from_ss["ticker"], "603083.SS")
+        self.assertEqual(
+            route_from_sh["target_infrastructure_layer"],
+            "Layer_4_Institutional_Strategy",
+        )
+
     def test_unknown_ticker_uses_default_research_surveillance_route(self) -> None:
         route = TelemetryRouter().route("unknown")
 
@@ -67,6 +113,28 @@ class TelemetryRouterTests(unittest.TestCase):
     def test_router_rejects_blank_ticker(self) -> None:
         with self.assertRaisesRegex(ValueError, "ticker"):
             route_ticker(" ")
+
+    def test_main_pipeline_event_smoke_executes_only_available_event_kernels(self) -> None:
+        from datetime import datetime, timezone
+
+        from src.main_pipeline import run_daily_smoke
+
+        report = run_daily_smoke(
+            "NVDA",
+            market_event="earnings_release",
+            observed_at=datetime(2026, 6, 13, 0, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(report["routing_specs"]["market_event"], "EARNINGS_RELEASE")
+        self.assertEqual(
+            [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
+            ["Module_14_CFIA", "Module_12_IRTA", "Module_18_IBDV"],
+        )
+        self.assertEqual(
+            report["unavailable_kernels"],
+            ["Module_01_FRTE", "Module_11_CVIB"],
+        )
+        self.assertFalse(report["substack_ready_flag"])
 
 
 if __name__ == "__main__":
