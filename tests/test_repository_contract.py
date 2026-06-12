@@ -29,6 +29,30 @@ class RepositoryStructureTests(unittest.TestCase):
         for filename in ("base_auditor.py", "main_pipeline.py", "telemetry_router.py"):
             self.assertTrue((SRC / filename).is_file(), filename)
 
+    def test_target_enterprise_config_lists_fifty_five_unique_tickers(self) -> None:
+        config_path = ROOT / "config" / "target_55_enterprises.json"
+        enterprise_config = json.loads(config_path.read_text(encoding="utf-8"))
+        tickers = [
+            ticker
+            for layer_tickers in enterprise_config.values()
+            for ticker in layer_tickers
+        ]
+
+        self.assertEqual(len(tickers), 55)
+        self.assertEqual(len(set(tickers)), 55)
+
+    def test_all_eighteen_kernel_architecture_directories_are_visible(self) -> None:
+        from src.module_manifest import MODULE_SPECS
+
+        for specification in MODULE_SPECS:
+            path = (
+                ROOT
+                / "evaluation_kernels"
+                / specification.layer
+                / f"Module_{specification.module_id:02d}_{specification.code}"
+            )
+            self.assertTrue(path.is_dir(), path)
+
     def test_manifest_covers_exactly_eighteen_unique_module_ids(self) -> None:
         from src.module_manifest import MODULE_SPECS
 

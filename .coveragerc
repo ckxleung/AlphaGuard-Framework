@@ -1,0 +1,3 @@
+[run]
+omit =
+    evaluation_kernels/*/layer_contract.py

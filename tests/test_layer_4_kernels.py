@@ -12,13 +12,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from evaluation_kernels.layer_4_strategy.module_12_irta.institutional_research_thesis_auditor import (
+from evaluation_kernels.layer_4_strategy.Module_12_IRTA.institutional_research_thesis_auditor import (
     InstitutionalResearchThesisAuditor,
 )
-from evaluation_kernels.layer_4_strategy.module_13_bmae.behavioral_market_auditor import (
+from evaluation_kernels.layer_4_strategy.Module_13_BMAE.behavioral_market_auditor import (
     BehavioralMarketAuditor,
 )
-from evaluation_kernels.layer_4_strategy.module_15_scgv.supply_chain_auditor import (
+from evaluation_kernels.layer_4_strategy.Module_15_SCGV.supply_chain_auditor import (
     SupplyChainAuditor,
 )
 
@@ -295,13 +295,13 @@ class KernelStandaloneTests(unittest.TestCase):
         }
         scripts = (
             ROOT
-            / "evaluation_kernels/layer_4_strategy/module_12_irta/"
+            / "evaluation_kernels/layer_4_strategy/Module_12_IRTA/"
             "institutional_research_thesis_auditor.py",
             ROOT
-            / "evaluation_kernels/layer_4_strategy/module_13_bmae/"
+            / "evaluation_kernels/layer_4_strategy/Module_13_BMAE/"
             "behavioral_market_auditor.py",
             ROOT
-            / "evaluation_kernels/layer_4_strategy/module_15_scgv/"
+            / "evaluation_kernels/layer_4_strategy/Module_15_SCGV/"
             "supply_chain_auditor.py",
         )
 

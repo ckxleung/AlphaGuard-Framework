@@ -23,6 +23,7 @@ REQUIRED_LAYERS = (
     "layer_4_strategy",
 )
 FORBIDDEN_MARKERS = ("TODO", "NotImplementedError")
+TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_55_enterprises.json"
 
 
 def _validate_kernel_file(path: Path) -> tuple[str, ...]:
@@ -48,10 +49,23 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
     """Validate structure, manifest, and all registered implementations."""
     errors = list(validate_manifest())
     kernel_root = root / "evaluation_kernels"
+    target_config = root / TARGET_ENTERPRISE_CONFIG.relative_to(ROOT)
 
     for layer in REQUIRED_LAYERS:
         if not (kernel_root / layer).is_dir():
             errors.append(f"Missing required layer directory: {layer}")
+
+    for spec in MODULE_SPECS:
+        module_directory = (
+            kernel_root
+            / spec.layer
+            / f"Module_{spec.module_id:02d}_{spec.code}"
+        )
+        if not module_directory.is_dir():
+            errors.append(
+                f"Missing visible kernel architecture directory: "
+                f"{module_directory.relative_to(root)}"
+            )
 
     for path in kernel_root.rglob("*.py"):
         errors.extend(_validate_kernel_file(path))
@@ -65,6 +79,25 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
                 f"Module {spec.module_id} implementation is missing: "
                 f"{spec.implementation_path}"
             )
+
+    if not target_config.is_file():
+        errors.append("Missing target enterprise config: config/target_55_enterprises.json")
+    else:
+        try:
+            enterprise_config = json.loads(target_config.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            errors.append(f"Invalid target enterprise config JSON: {error}")
+        else:
+            configured_tickers = [
+                str(ticker).strip().upper()
+                for tickers in enterprise_config.values()
+                if isinstance(tickers, list)
+                for ticker in tickers
+            ]
+            if len(configured_tickers) != 55:
+                errors.append("Target enterprise config must list exactly 55 tickers.")
+            if len(configured_tickers) != len(set(configured_tickers)):
+                errors.append("Target enterprise config contains duplicate tickers.")
 
     return {
         "valid": not errors,
