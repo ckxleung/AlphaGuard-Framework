@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Evidence-aware cohort and event routing for the 55-enterprise portfolio."""
+"""Evidence-aware cohort and event routing for the monitored enterprise portfolio."""
 
 from __future__ import annotations
 
@@ -139,9 +139,9 @@ def load_enterprise_profiles(
             target_tickers.add(ticker)
             for alias in _ticker_aliases(ticker):
                 target_layers[alias] = str(layer_name)
-    if set(profiles) != target_tickers or len(profiles) != 55:
+    if set(profiles) != target_tickers or len(profiles) != len(target_tickers):
         raise ValueError(
-            "enterprise monitoring profiles must exactly match the 55 target tickers."
+            "enterprise monitoring profiles must exactly match the target ticker universe."
         )
     for ticker, profile in profiles.items():
         profile["functional_layer"] = target_layers[ticker]
@@ -222,7 +222,7 @@ def plan_monitoring_event(event: Mapping[str, Any]) -> dict[str, Any]:
     profile = profiles.get(validated["ticker"])
     if profile is None:
         raise ValueError(
-            f"ticker {validated['ticker']} is not in the monitored 55-enterprise universe."
+            f"ticker {validated['ticker']} is not in the monitored enterprise universe."
         )
     routes = load_routing_policy()
     selected = routes.get(validated["event_type"])

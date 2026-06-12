@@ -109,8 +109,8 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
                 if isinstance(tickers, list)
                 for ticker in tickers
             ]
-            if len(configured_tickers) != 55:
-                errors.append("Target enterprise config must list exactly 55 tickers.")
+            if not configured_tickers:
+                errors.append("Target enterprise config must list at least one ticker.")
             if len(configured_tickers) != len(set(configured_tickers)):
                 errors.append("Target enterprise config contains duplicate tickers.")
 

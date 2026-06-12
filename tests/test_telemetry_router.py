@@ -39,6 +39,19 @@ class TelemetryRouterTests(unittest.TestCase):
             ["Module_05_SFRA", "Module_06_TLAB", "Module_10_OAPE"],
         )
 
+    def test_minimax_routes_to_layer_one_foundational_telemetry(self) -> None:
+        route = route_ticker("00100.HK")
+
+        self.assertEqual(route["ticker"], "00100.HK")
+        self.assertEqual(
+            route["target_infrastructure_layer"],
+            "Layer_1_Technical_Telemetry",
+        )
+        self.assertEqual(
+            route["triggered_kernels"],
+            ["Module_05_SFRA", "Module_06_TLAB", "Module_10_OAPE"],
+        )
+
     def test_configured_layer_two_ticker_routes_from_enterprise_matrix(self) -> None:
         route = route_ticker("AAPL")
 

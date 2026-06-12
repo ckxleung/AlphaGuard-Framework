@@ -18,7 +18,7 @@ remaining thirteen kernels exist.
 
 ## Cohorts
 
-The 55 monitored tickers are assigned exactly once in
+The 56 monitored tickers are assigned exactly once in
 `config/enterprise_monitoring_profiles.json`:
 
 - `FOUNDATIONAL_API`
@@ -97,7 +97,7 @@ python3 src/monitoring_control_plane.py \
   --module-payloads examples/module_payloads.financing.synthetic.json
 ```
 
-Generate the daily 55-company routing plan:
+Generate the daily 56-company routing plan:
 
 ```bash
 python3 src/monitoring_control_plane.py \

@@ -14,12 +14,12 @@ evaluation kernels are implemented:
 - one abstract `BaseAuditor.execute_audit()` interface;
 - a fail-closed institutional scorecard schema;
 - four required kernel layers;
-- an external 55-enterprise telemetry configuration;
+- an external 56-enterprise telemetry configuration;
 - an immutable registry covering module IDs 1 through 18;
 - a machine-readable specification catalog covering every module's inputs,
   deterministic rules, tolerance policy, rejection conditions, outputs, and
   data boundary;
-- a cohort and event-driven monitoring control plane for the 55-enterprise
+- a cohort and event-driven monitoring control plane for the monitored enterprise
   universe;
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
 - a DST-aware three-market timestamp matrix;
@@ -119,7 +119,7 @@ normalize and provenance financial statements before invoking a kernel.
 
 The scheduled workflow in `.github/workflows/daily_telemetry_cron.yml` runs
 every day at 04:00 HKT. It validates the repository, generates a planning-only
-55-company baseline artifact, and runs the deterministic synthetic smoke test.
+56-company baseline artifact, and runs the deterministic synthetic smoke test.
 The plan never claims that live collection or an audit occurred.
 
 The monitoring control plane combines three business cohorts with the four
@@ -128,6 +128,9 @@ event-driven peaks route between three and five. Selected but unimplemented
 kernels remain visible as `unavailable_modules`, while implemented kernels
 without evidence payloads are reported as skipped. See
 [`docs/MONITORING_OPERATIONS.md`](docs/MONITORING_OPERATIONS.md).
+
+The target universe currently contains 56 tickers. The configuration file name
+`target_55_enterprises.json` is retained for backward compatibility.
 
 ## Institutional Output Contract
 

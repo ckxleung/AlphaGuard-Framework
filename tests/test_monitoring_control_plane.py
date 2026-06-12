@@ -13,12 +13,20 @@ sys.path.insert(0, str(ROOT))
 
 
 class MonitoringPolicyTests(unittest.TestCase):
-    def test_all_fifty_five_targets_have_one_valid_cohort_profile(self) -> None:
+    def test_all_current_targets_have_one_valid_cohort_profile(self) -> None:
         from src.monitoring_control_plane import load_enterprise_profiles
 
         profiles = load_enterprise_profiles()
-        self.assertEqual(len(profiles), 55)
-        self.assertEqual(len(set(profiles)), 55)
+        self.assertEqual(len(profiles), 56)
+        self.assertEqual(len(set(profiles)), 56)
+        self.assertEqual(
+            profiles["00100.HK"]["cohort"],
+            "FOUNDATIONAL_API",
+        )
+        self.assertEqual(
+            profiles["00100.HK"]["functional_layer"],
+            "Layer_1_Technical_Telemetry",
+        )
         self.assertEqual(
             {profile["cohort"] for profile in profiles.values()},
             {
@@ -110,12 +118,12 @@ class MonitoringPolicyTests(unittest.TestCase):
                 }
             )
 
-    def test_portfolio_baseline_builds_fifty_five_non_publishable_plans(self) -> None:
+    def test_portfolio_baseline_builds_current_non_publishable_plans(self) -> None:
         from src.monitoring_control_plane import plan_portfolio_baseline
 
         report = plan_portfolio_baseline("2026-06-13T00:00:00Z")
-        self.assertEqual(report["target_count"], 55)
-        self.assertEqual(len(report["plans"]), 55)
+        self.assertEqual(report["target_count"], 56)
+        self.assertEqual(len(report["plans"]), 56)
         self.assertFalse(report["publication_eligible"])
         self.assertTrue(
             all(not plan["publication_eligible"] for plan in report["plans"])

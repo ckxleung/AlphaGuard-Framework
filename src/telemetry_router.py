@@ -133,15 +133,17 @@ class TelemetryRouter:
                         )
                     enterprise_layers[alias] = layer_name
 
-        canonical_tickers = {
+        canonical_ticker_list = [
             str(ticker).strip().upper()
             for tickers in raw_config.values()
             for ticker in tickers
-        }
-        if len(canonical_tickers) != 55:
+        ]
+        if not canonical_ticker_list:
             raise ValueError(
-                "target enterprise config must contain exactly 55 unique tickers."
+                "target enterprise config must contain at least one ticker."
             )
+        if len(canonical_ticker_list) != len(set(canonical_ticker_list)):
+            raise ValueError("target enterprise config contains duplicate tickers.")
         return enterprise_layers
 
     @staticmethod
@@ -224,7 +226,7 @@ class TelemetryRouter:
                     target_infrastructure_layer=layer,
                     triggered_kernels=LAYER_KERNELS[layer],
                     priority_level=LAYER_PRIORITIES[layer],
-                    telemetry_hook=f"TARGET_55_ENTERPRISE_{normalized}_DAILY_LOOP",
+                    telemetry_hook=f"TARGET_ENTERPRISE_{normalized}_DAILY_LOOP",
                 )
             else:
                 spec = RoutingSpec(

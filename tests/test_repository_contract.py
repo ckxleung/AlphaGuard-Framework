@@ -73,7 +73,7 @@ class RepositoryStructureTests(unittest.TestCase):
         example = json.loads(required_paths[5].read_text(encoding="utf-8"))
         self.assertTrue(validate_publication_artifact(example))
 
-    def test_target_enterprise_config_lists_fifty_five_unique_tickers(self) -> None:
+    def test_target_enterprise_config_lists_current_unique_tickers(self) -> None:
         config_path = ROOT / "config" / "target_55_enterprises.json"
         enterprise_config = json.loads(config_path.read_text(encoding="utf-8"))
         tickers = [
@@ -82,8 +82,9 @@ class RepositoryStructureTests(unittest.TestCase):
             for ticker in layer_tickers
         ]
 
-        self.assertEqual(len(tickers), 55)
-        self.assertEqual(len(set(tickers)), 55)
+        self.assertEqual(len(tickers), 56)
+        self.assertIn("00100.HK", tickers)
+        self.assertEqual(len(set(tickers)), 56)
 
     def test_all_eighteen_kernel_architecture_directories_are_visible(self) -> None:
         from src.module_manifest import MODULE_SPECS
