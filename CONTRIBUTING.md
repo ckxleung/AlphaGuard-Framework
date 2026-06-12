@@ -27,6 +27,10 @@ Examples:
 5. Register the implementation path and set its manifest status to
    `IMPLEMENTED`.
 
+Financial-statement kernels must document their sign convention, source ID,
+fiscal period, units or currency, and numerical tolerance. Do not place live
+network calls or fabricated fallback values inside deterministic kernels.
+
 ## Required Pull Request Evidence
 
 - deterministic ground-truth equation or regulatory source;

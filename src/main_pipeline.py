@@ -27,6 +27,13 @@ BANNER = "🛡️ ALPHAGUARD FRAMEWORK: AUTOMATED DAILY AUDIT PIPELINE RUN"
 DIVIDER = "=" * 75
 
 
+def _kernel_identifier(code: str) -> str:
+    for specification in MODULE_SPECS:
+        if specification.code == code:
+            return f"Module_{specification.module_id:02d}_{code}"
+    raise KeyError(f"Unknown AlphaGuard module code: {code}")
+
+
 def _load_json_object(path: Path) -> dict[str, Any]:  # pragma: no cover
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
@@ -91,6 +98,7 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     ai_output = {
         "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
         "investment_thesis": "NVDA demand remains supported by disclosed capacity expansion.",
+        "reported_operating_cash_flow": 5_080_000_000,
         "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
         "rating": "Buy",
         "reorder_point": reorder_point,
@@ -103,6 +111,13 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "capital_efficiency": 2.0,
         "max_utilization": 0.90,
         "blended_asp": 5.0,
+        "net_income": 5_000_000_000,
+        "non_cash_adjustments": 600_000_000,
+        "increase_in_net_working_capital": 520_000_000,
+        "reported_operating_cash_flow": 5_080_000_000,
+        "currency": "USD",
+        "source_id": "SYNTHETIC-DAILY-SMOKE",
+        "fiscal_period_end": "2026-03-31",
         "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
         "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
         "discussion_volume": [100.0, 110.0, 120.0, 130.0],
@@ -130,11 +145,16 @@ def run_daily_smoke(
         for kernel in route["triggered_kernels"]
     }
     scorecards = []
+    unavailable_kernels = []
     for code in sorted(route_codes):
-        scorecard = dict(pipeline_report["results"].get(code, {}))
+        result = pipeline_report["results"].get(code)
+        if result is None:
+            unavailable_kernels.append(_kernel_identifier(code))
+            continue
+        scorecard = dict(result)
         scorecard.update(
             {
-                "kernel_id": f"Module_{next(spec.module_id for spec in MODULE_SPECS if spec.code == code):02d}_{code}",
+                "kernel_id": _kernel_identifier(code),
                 "detected_anomalies": []
                 if scorecard.get("data_quality_status") == "APPROVED"
                 else [scorecard.get("structured_written_feedback", "Rejected by kernel.")],
@@ -144,12 +164,16 @@ def run_daily_smoke(
 
     return {
         "telemetry_timestamp_matrix": timestamp_matrix,
+        "data_provenance": {
+            "synthetic_data": True,
+            "source_id": "SYNTHETIC-DAILY-SMOKE",
+            "publication_eligible": False,
+        },
         "routing_specs": route,
         "forensic_audit_scorecard": scorecards,
+        "unavailable_kernels": unavailable_kernels,
         "repository_status": pipeline_report["repository_status"],
-        "substack_ready_flag": all(
-            item.get("data_quality_status") == "APPROVED" for item in scorecards
-        ),
+        "substack_ready_flag": False,
     }
 
 

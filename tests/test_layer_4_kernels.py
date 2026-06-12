@@ -225,13 +225,14 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_three_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_four_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
         report = run_pipeline(
             {
                 "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
+                "reported_operating_cash_flow": 5_080_000_000,
                 "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
                 "rating": "Buy",
                 "reorder_point": 1000.0 + safety_stock,
@@ -244,6 +245,13 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "capital_efficiency": 2.0,
                 "max_utilization": 0.90,
                 "blended_asp": 5.0,
+                "net_income": 5_000_000_000,
+                "non_cash_adjustments": 600_000_000,
+                "increase_in_net_working_capital": 520_000_000,
+                "reported_operating_cash_flow": 5_080_000_000,
+                "currency": "USD",
+                "source_id": "SYNTHETIC-PIPELINE-FIXTURE",
+                "fiscal_period_end": "2026-03-31",
                 "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
                 "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
                 "discussion_volume": [100.0, 110.0, 120.0, 130.0],
@@ -256,8 +264,8 @@ class ManifestIntegrationTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(report["executed_modules"], 3)
-        self.assertEqual(set(report["results"]), {"IRTA", "BMAE", "SCGV"})
+        self.assertEqual(report["executed_modules"], 4)
+        self.assertEqual(set(report["results"]), {"IRTA", "BMAE", "CFIA", "SCGV"})
         self.assertTrue(
             all(
                 scorecard["data_quality_status"] == "APPROVED"

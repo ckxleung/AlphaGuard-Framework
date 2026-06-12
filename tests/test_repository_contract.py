@@ -223,7 +223,8 @@ class StandaloneScriptTests(unittest.TestCase):
         self.assertIn("telemetry_timestamp_matrix", payload)
         self.assertNotIn("telemetry_timestamp", payload)
         self.assertEqual(payload["routing_specs"]["ticker"], "NVDA")
-        self.assertTrue(payload["substack_ready_flag"])
+        self.assertFalse(payload["substack_ready_flag"])
+        self.assertTrue(payload["data_provenance"]["synthetic_data"])
         self.assertGreaterEqual(len(payload["forensic_audit_scorecard"]), 1)
 
 

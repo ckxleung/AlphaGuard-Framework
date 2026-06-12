@@ -22,7 +22,7 @@ the previously missing unique ID.
 | 11 | CVIB | Layer 2 Valuation | Specified |
 | 12 | IRTA | Layer 4 Strategy | Implemented |
 | 13 | BMAE | Layer 4 Strategy | Implemented |
-| 14 | CFIA | Layer 2 Valuation | Specified |
+| 14 | CFIA | Layer 2 Valuation | Implemented |
 | 15 | SCGV | Layer 4 Strategy | Implemented |
 | 16 | AMWE | Layer 3 Compliance | Specified |
 | 17 | ERCA | Layer 3 Compliance | Specified |
@@ -122,6 +122,78 @@ Reject when all conditions are true:
 2. latest institutional block-trade flow is a net outflow;
 3. latest price change is non-positive;
 4. the AI rating is `Strong Buy`.
+
+## Module 14 CFIA
+
+**Name:** Corporate Financial Integrity Auditor
+
+**Purpose:** Detect operating-cash-flow hallucinations and working-capital
+sign inversions in AI-generated financial analysis.
+
+### Sign Convention and Deterministic Equation
+
+`increase_in_net_working_capital` is a balance-sheet movement. A positive value
+means more cash is tied up in working capital.
+
+```text
+formula_operating_cash_flow
+  = net_income
+  + non_cash_adjustments
+  - increase_in_net_working_capital
+```
+
+The ambiguous field name `change_in_working_capital` is rejected because data
+providers frequently encode the cash-flow-statement contribution with the
+opposite sign.
+
+### Required Inputs
+
+AI output:
+
+- `reported_operating_cash_flow`.
+
+Ground truth:
+
+- `net_income`;
+- `non_cash_adjustments`;
+- `increase_in_net_working_capital`;
+- `reported_operating_cash_flow`;
+- `currency`;
+- `source_id`;
+- `fiscal_period_end`, formatted as ISO-8601 `YYYY-MM-DD`;
+- optional non-negative `absolute_tolerance`;
+- optional non-negative `relative_tolerance`.
+
+All numeric inputs must be finite. Missing fields are never replaced with zero.
+
+### Ground-Truth Gate
+
+Before evaluating the AI output, the kernel reconciles the reported ground
+truth OCF to the deterministic formula. If the source rows fail this tie-out,
+execution stops with an input error. A corrupted benchmark cannot be used to
+score an AI artifact.
+
+### Rejection and Scoring Rules
+
+- `5.0 / APPROVED`: AI OCF is within the greater of absolute or relative
+  tolerance.
+- `3.0 / REJECTED`: AI OCF exceeds tolerance without matching the exact
+  sign-inversion result.
+- `1.0 / REJECTED`: AI OCF reconciles to
+  `net_income + non_cash_adjustments + increase_in_net_working_capital`,
+  confirming working-capital sign inversion.
+
+The scorecard includes currency, source, fiscal period, formula OCF, reported
+ground-truth OCF, AI OCF, tolerance, reconciliation delta, and detected
+anomalies.
+
+### Data Boundary
+
+CFIA is a deterministic audit kernel, not a market-data downloader. Network
+retrieval, ticker normalization, filing selection, unit conversion, and source
+licensing belong in an external ingestion adapter. The kernel refuses missing
+or internally inconsistent data and never introduces fabricated fallback
+financials.
 
 ## Module 15 SCGV
 

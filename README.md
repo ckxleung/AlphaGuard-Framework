@@ -20,9 +20,9 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-IRTA, BMAE, and SCGV are implemented and registered; the remaining 15 modules
-remain explicitly `SPECIFIED` until their complete schemas, tolerance policies,
-and adversarial fixtures are implemented.
+IRTA, BMAE, CFIA, and SCGV are implemented and registered; the remaining 14
+modules remain explicitly `SPECIFIED` until their complete schemas, tolerance
+policies, and adversarial fixtures are implemented.
 
 ## Required Structure
 
@@ -92,6 +92,11 @@ python3 -m coverage report --fail-under=80
 
 The canonical formulas and rejection contracts are documented in
 [`docs/MASTER_SPEC.md`](docs/MASTER_SPEC.md).
+
+Implemented accounting kernels consume explicit, source-identified inputs.
+They do not download market data, substitute fabricated fallback values, or
+silently convert missing fields to zero. External ingestion adapters must
+normalize and provenance financial statements before invoking a kernel.
 
 ## Daily Telemetry Loop
 

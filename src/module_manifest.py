@@ -34,7 +34,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "SPECIFIED"),
     ModuleSpec(12, "IRTA", "Buy-Side Institutional Research Thesis Audit", "layer_4_strategy", "InstitutionalResearchThesisAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_12_IRTA/institutional_research_thesis_auditor.py"),
     ModuleSpec(13, "BMAE", "Behavioral Market-Microstructure Alpha Engine", "layer_4_strategy", "BehavioralMarketAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_13_BMAE/behavioral_market_auditor.py"),
-    ModuleSpec(14, "CFIA", "Corporate Financial Integrity Audit", "layer_2_valuation", "CorporateFinancialAuditor", "SPECIFIED"),
+    ModuleSpec(14, "CFIA", "Corporate Financial Integrity Audit", "layer_2_valuation", "CorporateFinancialAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_14_CFIA/cfia_auditor.py"),
     ModuleSpec(15, "SCGV", "Supply Chain GenAI Validator", "layer_4_strategy", "SupplyChainAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_15_SCGV/supply_chain_auditor.py"),
     ModuleSpec(16, "AMWE", "AI Model Walk-Forward Evaluation", "layer_3_compliance", "TimeSeriesLeakageAuditor", "SPECIFIED"),
     ModuleSpec(17, "ERCA", "Enterprise Risk and Compliance Audit", "layer_3_compliance", "EnterpriseComplianceAuditor", "SPECIFIED"),
