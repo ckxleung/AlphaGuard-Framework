@@ -43,3 +43,7 @@ For publication-related changes, also provide:
 - methodology references for every material claim;
 - a JSON sidecar that passes `src/output_standard.py`;
 - confirmation that synthetic data and strategy risk are disclosed.
+
+Temporal changes must include deterministic tests with injected UTC datetimes.
+Do not test against the machine's current wall clock. DST transitions, market
+session boundaries, and the holiday-calendar limitation must remain explicit.

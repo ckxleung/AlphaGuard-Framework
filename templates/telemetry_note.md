@@ -10,6 +10,15 @@
 **Classification:** {{CLASSIFICATION}}  
 **Data Status:** {{LIVE_OR_SYNTHETIC}}
 
+| Market | Local Timestamp | Zone | Scheduled Session |
+|---|---|---|---|
+| US Equities | {{US_TIMESTAMP}} | {{US_TIMEZONE_ABBREVIATION}} | {{US_SESSION_STATUS}} |
+| Hong Kong Equities | {{HK_TIMESTAMP}} | HKT | {{HK_SESSION_STATUS}} |
+| China A-Shares | {{CN_TIMESTAMP}} | CST | {{CN_SESSION_STATUS}} |
+
+> Session status is a weekday schedule projection unless an exchange holiday
+> calendar is explicitly identified as applied.
+
 ---
 
 ### EXECUTIVE SUMMARY

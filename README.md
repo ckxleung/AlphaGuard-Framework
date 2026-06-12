@@ -14,6 +14,7 @@ evaluation kernels are implemented:
 - an external 55-enterprise telemetry configuration;
 - an immutable registry covering module IDs 1 through 18;
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
+- a DST-aware three-market timestamp matrix;
 - a machine-verifiable institutional publication contract;
 - placeholder and structure validation;
 - a one-command pipeline entry point.
@@ -59,6 +60,7 @@ templates/
 src/
   base_auditor.py
   main_pipeline.py
+  market_clock.py
   module_manifest.py
   output_standard.py
   repository_validator.py
@@ -113,6 +115,19 @@ in
 [`schemas/publication_artifact.schema.json`](schemas/publication_artifact.schema.json).
 Examples containing synthetic data are explicitly labeled and must pass
 `src/output_standard.py` before publication.
+
+## Cross-Market Time Integrity
+
+Every smoke run and publication artifact carries a synchronized UTC, New York,
+Hong Kong, and Shanghai timestamp matrix. New York EST/EDT conversion is
+handled by the standard-library `zoneinfo` database. Scheduled market states
+include pre-market, regular tape, lunch breaks, closing auctions, post-market,
+and weekend closure.
+
+The current engine intentionally declares
+`calendar_basis: WEEKDAY_SCHEDULE_ONLY`; exchange holidays and extraordinary
+closures are not presented as resolved. See
+[`docs/TEMPORAL_STANDARD.md`](docs/TEMPORAL_STANDARD.md).
 
 ## Kernel Contract
 

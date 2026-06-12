@@ -31,5 +31,7 @@ jobs:
       - name: Validate institutional publication contract
         run: |
           python src/output_standard.py examples/publication_artifact.example.json
+      - name: Validate cross-market temporal engine
+        run: python src/market_clock.py
       - name: Compile Python sources
         run: python -m compileall -q src evaluation_kernels tests

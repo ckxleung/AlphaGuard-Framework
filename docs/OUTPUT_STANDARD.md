@@ -143,6 +143,7 @@ Required top-level fields:
 - `title`;
 - `as_of`;
 - `generated_at`;
+- `telemetry_timestamp_matrix`;
 - `engine_version`;
 - `classification`;
 - `executive_summary`;
@@ -165,6 +166,12 @@ An artifact is publishable only when all gates pass:
 8. no placeholder values remain in the final report;
 9. Markdown and JSON use the same artifact ID and as-of time;
 10. a human reviewer confirms that the prose does not overstate the evidence.
+
+The timestamp matrix must satisfy
+[`docs/TEMPORAL_STANDARD.md`](TEMPORAL_STANDARD.md). All three local market
+clocks must reconcile to one UTC instant, and that instant must equal the
+publication's `as_of` timestamp. A weekday schedule projection must not be
+described as an exchange-verified holiday calendar.
 
 ## Premium Gateway
 

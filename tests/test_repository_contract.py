@@ -29,6 +29,7 @@ class RepositoryStructureTests(unittest.TestCase):
         for filename in (
             "base_auditor.py",
             "main_pipeline.py",
+            "market_clock.py",
             "output_standard.py",
             "telemetry_router.py",
         ):
@@ -39,6 +40,7 @@ class RepositoryStructureTests(unittest.TestCase):
 
         required_paths = (
             ROOT / "docs" / "OUTPUT_STANDARD.md",
+            ROOT / "docs" / "TEMPORAL_STANDARD.md",
             ROOT / "schemas" / "publication_artifact.schema.json",
             ROOT / "templates" / "telemetry_note.md",
             ROOT / "templates" / "deep_dive_whitepaper.md",
@@ -47,13 +49,13 @@ class RepositoryStructureTests(unittest.TestCase):
         for path in required_paths:
             self.assertTrue(path.is_file(), path)
 
-        schema = json.loads(required_paths[1].read_text(encoding="utf-8"))
+        schema = json.loads(required_paths[2].read_text(encoding="utf-8"))
         self.assertEqual(
             schema["$id"],
             "https://github.com/ckxleung/AlphaGuard-Framework/"
             "schemas/publication_artifact.schema.json",
         )
-        example = json.loads(required_paths[4].read_text(encoding="utf-8"))
+        example = json.loads(required_paths[5].read_text(encoding="utf-8"))
         self.assertTrue(validate_publication_artifact(example))
 
     def test_target_enterprise_config_lists_fifty_five_unique_tickers(self) -> None:
@@ -173,6 +175,7 @@ class StandaloneScriptTests(unittest.TestCase):
     def test_generated_python_scripts_run_outside_repository_root(self) -> None:
         commands = (
             [sys.executable, str(SRC / "base_auditor.py")],
+            [sys.executable, str(SRC / "market_clock.py")],
             [sys.executable, str(SRC / "module_manifest.py"), "--module", "12"],
             [
                 sys.executable,
@@ -217,6 +220,8 @@ class StandaloneScriptTests(unittest.TestCase):
         json_start = result.stdout.index("{")
         json_end = result.stdout.rindex("}") + 1
         payload = json.loads(result.stdout[json_start:json_end])
+        self.assertIn("telemetry_timestamp_matrix", payload)
+        self.assertNotIn("telemetry_timestamp", payload)
         self.assertEqual(payload["routing_specs"]["ticker"], "NVDA")
         self.assertTrue(payload["substack_ready_flag"])
         self.assertGreaterEqual(len(payload["forensic_audit_scorecard"]), 1)

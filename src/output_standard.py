@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.base_auditor import BaseAuditor
+from src.market_clock import validate_timestamp_matrix
 
 
 SCHEMA_VERSION = "1.0"
@@ -29,6 +30,7 @@ REQUIRED_ARTIFACT_KEYS = frozenset(
         "title",
         "as_of",
         "generated_at",
+        "telemetry_timestamp_matrix",
         "engine_version",
         "classification",
         "executive_summary",
@@ -241,6 +243,18 @@ def validate_publication_artifact(
     generated_at = _parse_timestamp(validated["generated_at"], "generated_at")
     if generated_at < as_of:
         raise ValueError("generated_at cannot precede as_of.")
+
+    validated["telemetry_timestamp_matrix"] = validate_timestamp_matrix(
+        validated["telemetry_timestamp_matrix"]
+    )
+    matrix_utc = datetime.fromisoformat(
+        validated["telemetry_timestamp_matrix"]["telemetry_matrix_utc"].replace(
+            "Z",
+            "+00:00",
+        )
+    )
+    if as_of != matrix_utc:
+        raise ValueError("as_of must match the telemetry timestamp matrix instant.")
 
     validated["sources"], source_ids = _validate_sources(validated["sources"])
     validated["claims"] = _validate_claims(validated["claims"], source_ids)

@@ -27,6 +27,7 @@ FORBIDDEN_MARKERS = ("TODO", "NotImplementedError")
 TARGET_ENTERPRISE_CONFIG = ROOT / "config" / "target_55_enterprises.json"
 PUBLICATION_ASSETS = (
     "docs/OUTPUT_STANDARD.md",
+    "docs/TEMPORAL_STANDARD.md",
     "schemas/publication_artifact.schema.json",
     "templates/telemetry_note.md",
     "templates/deep_dive_whitepaper.md",

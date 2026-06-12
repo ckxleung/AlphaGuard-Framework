@@ -203,3 +203,13 @@ Every publication must:
 The complete specification is maintained in
 [`docs/OUTPUT_STANDARD.md`](OUTPUT_STANDARD.md). The canonical machine schema
 is `schemas/publication_artifact.schema.json`.
+
+## Cross-Market Temporal Contract
+
+Pipeline and publication artifacts must carry one UTC observation instant and
+its synchronized projections for US equities, Hong Kong equities, and China
+A-shares. DST handling must use IANA timezone data through Python `zoneinfo`.
+
+Scheduled session states must disclose whether an exchange holiday calendar
+was applied. The current contract is documented in
+[`docs/TEMPORAL_STANDARD.md`](TEMPORAL_STANDARD.md).

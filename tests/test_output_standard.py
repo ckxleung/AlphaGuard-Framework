@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from datetime import datetime, timezone
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +15,8 @@ sys.path.insert(0, str(ROOT))
 
 
 def valid_artifact() -> dict:
+    from src.market_clock import generate_institutional_timestamp_matrix
+
     return {
         "schema_version": "1.0",
         "artifact_id": "CAD-TN-20260612-001",
@@ -21,6 +24,9 @@ def valid_artifact() -> dict:
         "title": "Synthetic Enterprise AI Telemetry Note",
         "as_of": "2026-06-12T16:00:00+08:00",
         "generated_at": "2026-06-12T16:05:00+08:00",
+        "telemetry_timestamp_matrix": generate_institutional_timestamp_matrix(
+            datetime(2026, 6, 12, 8, 0, tzinfo=timezone.utc)
+        ),
         "engine_version": "AlphaGuard 1.0.4",
         "classification": "B2B_ENTERPRISE_AI_INFRASTRUCTURE_RISK",
         "executive_summary": (
@@ -117,6 +123,15 @@ class PublicationOutputContractTests(unittest.TestCase):
         artifact["as_of"] = "2026-06-12T16:00:00"
 
         with self.assertRaisesRegex(ValueError, "timezone"):
+            validate_publication_artifact(artifact)
+
+    def test_as_of_must_match_timestamp_matrix_instant(self) -> None:
+        from src.output_standard import validate_publication_artifact
+
+        artifact = valid_artifact()
+        artifact["as_of"] = "2026-06-12T16:00:01+08:00"
+
+        with self.assertRaisesRegex(ValueError, "as_of.*matrix"):
             validate_publication_artifact(artifact)
 
     def test_invalid_scorecard_is_rejected(self) -> None:

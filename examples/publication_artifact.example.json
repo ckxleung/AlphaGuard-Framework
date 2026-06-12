@@ -5,6 +5,41 @@
   "title": "Synthetic Supply-Chain Telemetry Note",
   "as_of": "2026-06-12T16:00:00+08:00",
   "generated_at": "2026-06-12T16:05:00+08:00",
+  "telemetry_timestamp_matrix": {
+    "telemetry_matrix_utc": "2026-06-12T08:00:00.000000Z",
+    "market_clocks": {
+      "US_EQUITIES": {
+        "timestamp": "2026-06-12T04:00:00.000000-04:00",
+        "timezone_name": "America/New_York",
+        "timezone_abbreviation": "EDT",
+        "utc_offset": "-04:00",
+        "schedule_model": "US_EQUITIES_EXTENDED_MODEL",
+        "session_status": "PRE_MARKET",
+        "calendar_basis": "WEEKDAY_SCHEDULE_ONLY",
+        "holiday_calendar_applied": false
+      },
+      "HK_EQUITIES": {
+        "timestamp": "2026-06-12T16:00:00.000000+08:00",
+        "timezone_name": "Asia/Hong_Kong",
+        "timezone_abbreviation": "HKT",
+        "utc_offset": "+08:00",
+        "schedule_model": "HKEX_SECURITIES_MODEL",
+        "session_status": "CLOSING_AUCTION",
+        "calendar_basis": "WEEKDAY_SCHEDULE_ONLY",
+        "holiday_calendar_applied": false
+      },
+      "CN_A_SHARES": {
+        "timestamp": "2026-06-12T16:00:00.000000+08:00",
+        "timezone_name": "Asia/Shanghai",
+        "timezone_abbreviation": "CST",
+        "utc_offset": "+08:00",
+        "schedule_model": "SSE_MAIN_BOARD_MODEL",
+        "session_status": "CLOSED",
+        "calendar_basis": "WEEKDAY_SCHEDULE_ONLY",
+        "holiday_calendar_applied": false
+      }
+    }
+  },
   "engine_version": "AlphaGuard 1.0.4",
   "classification": "B2B_ENTERPRISE_AI_INFRASTRUCTURE_RISK",
   "executive_summary": "Synthetic fixture demonstrating the AlphaGuard institutional publication contract. It is not live market research.",

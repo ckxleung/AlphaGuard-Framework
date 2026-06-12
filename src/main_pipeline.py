@@ -8,7 +8,7 @@ import importlib.util
 import json
 import math
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.base_auditor import BaseAuditor
+from src.market_clock import generate_institutional_timestamp_matrix
 from src.module_manifest import MODULE_SPECS
 from src.repository_validator import validate_repository
 from src.telemetry_router import route_ticker
@@ -115,10 +116,14 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     return ai_output, ground_truth
 
 
-def run_daily_smoke(ticker: str = "NVDA") -> dict[str, Any]:
+def run_daily_smoke(
+    ticker: str = "NVDA",
+    observed_at: datetime | None = None,
+) -> dict[str, Any]:
     route = route_ticker(ticker)
     ai_output, ground_truth = _daily_smoke_inputs()
     pipeline_report = run_pipeline(ai_output, ground_truth)
+    timestamp_matrix = generate_institutional_timestamp_matrix(observed_at)
 
     route_codes = {
         kernel.replace("Module_", "").split("_", 1)[1]
@@ -138,7 +143,7 @@ def run_daily_smoke(ticker: str = "NVDA") -> dict[str, Any]:
         scorecards.append(scorecard)
 
     return {
-        "telemetry_timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S HKT"),
+        "telemetry_timestamp_matrix": timestamp_matrix,
         "routing_specs": route,
         "forensic_audit_scorecard": scorecards,
         "repository_status": pipeline_report["repository_status"],
@@ -149,21 +154,29 @@ def run_daily_smoke(ticker: str = "NVDA") -> dict[str, Any]:
 
 
 def print_daily_smoke_report(ticker: str = "NVDA") -> None:
+    observed_at = datetime.now(timezone.utc)
     route = route_ticker(ticker)
+    utc_log_time = observed_at.isoformat(timespec="seconds").replace("+00:00", "Z")
     print(DIVIDER)
     print(BANNER)
     print(DIVIDER)
     print(
-        f"{datetime.now():%Y-%m-%d %H:%M:%S} [INFO] "
+        f"{utc_log_time} [INFO] "
         f"(AlphaGuard-Router) Successfully routed {route['ticker']} to "
         f"{route['target_infrastructure_layer']} with priority "
         f"[{route['priority_level']}]"
     )
     print(
-        f"{datetime.now():%Y-%m-%d %H:%M:%S} [INFO] "
+        f"{utc_log_time} [INFO] "
         f"(AlphaGuard-Pipeline) Ingesting market data vectors for {route['ticker']}..."
     )
-    print(json.dumps(run_daily_smoke(ticker), indent=2, ensure_ascii=False))
+    print(
+        json.dumps(
+            run_daily_smoke(ticker, observed_at=observed_at),
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
     print(DIVIDER)
 
 
