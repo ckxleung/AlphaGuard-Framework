@@ -26,7 +26,183 @@ the previously missing unique ID.
 | 15 | SCGV | Layer 4 Strategy | Implemented |
 | 16 | AMWE | Layer 3 Compliance | Specified |
 | 17 | ERCA | Layer 3 Compliance | Specified |
-| 18 | IBDV | Layer 2 Valuation | Specified |
+| 18 | IBDV | Layer 2 Valuation | Implemented |
+
+## Specification Contract and Source Reconciliation
+
+Every `Specified` module has a machine-readable contract in
+`src/kernel_spec_catalog.py` containing eight mandatory elements:
+
+1. problem statement;
+2. AI artifact inputs;
+3. ground-truth and provenance inputs;
+4. deterministic rules;
+5. tolerance policy;
+6. rejection conditions;
+7. scorecard outputs;
+8. declared data boundary.
+
+The imported frontier-benchmark document used a conflicting numbering scheme
+for its final modules. AlphaGuard preserves the established canonical IDs:
+
+- source `RSSF` is absorbed as a retail-usability extension of Module 13 BMAE;
+- source `FLIB` chained-tool requirements are absorbed by Module 06 TLAB;
+- source `SCGV` numbered as 17 maps to canonical Module 15 SCGV;
+- canonical Module 17 remains ERCA.
+
+Source examples are treated as design notes, not production code. Silent file
+fallbacks, raw keyword-only grading, floating-point ledger reconciliation, live
+unrecorded lookups, and inconsistent status labels are explicitly excluded.
+
+## Module 01 FRTE
+
+**Purpose:** Compare equivalent prior- and current-period filing sections and
+identify material risk disclosures omitted or invented by an AI summary.
+
+**Contract:** Inputs include the AI summary, comparable filing texts, section
+boundaries, source IDs, period ends, and a materiality rubric. The engine
+classifies added, removed, and modified disclosure units, then binds each AI
+claim to an evidence span. Exact source identity is required; concept matching
+and materiality weights are fixture-controlled.
+
+**Reject when:** a material new risk is omitted, the AI invents a change, or
+the filings are not comparable by form, period, section, or provenance.
+
+## Module 02 APAC
+
+**Purpose:** Audit multi-step APAC operating, options-skew, regulatory, and
+credit-risk transmission reasoning.
+
+**Contract:** Inputs include dated operating metrics, one normalized option
+chain snapshot, export-control sources, entity linkages, market calendars, and
+the AI transmission chain. The engine recalculates the declared delta-bucket IV
+skew and validates every causal edge. Numeric results default to a 0.5% relative
+tolerance; dates, entities, expiries, currencies, and delta conventions must
+match exactly.
+
+**Reject when:** a required calculation or evidence step is skipped, market
+snapshots are mixed, or a regulatory statement is unsupported or temporally
+invalid.
+
+## Module 03 AMDG
+
+**Purpose:** Evaluate wealth-management and institutional office deliverables
+for financial accuracy, source traceability, and rendered visual discipline.
+
+**Contract:** Recalculate compounding, allocation, fee, tax, and cash-flow
+outputs from declared assumptions. Inspect action headlines, source footnotes,
+units, color limits, clipping, and table readability using both package metadata
+and render evidence. Numerical defects carry greater weight than cosmetic ones.
+
+**Reject when:** a material calculation fails, critical content is clipped or
+unreadable, or assumptions and source references are missing.
+
+## Module 04 CASS
+
+**Purpose:** Test whether a strategy resolves conflicts among controlled
+stakeholder personas under explicit resource and policy constraints.
+
+**Contract:** Map recommendations to affected personas, identify incompatible
+commitments, and require an owner, trade-off, decision, and escalation path for
+every unresolved conflict. Non-negotiable constraints are exact; preferences
+use scenario-declared weights.
+
+**Reject when:** a mandatory constraint is violated, incompatible commitments
+are presented as consensus, or a material conflict lacks resolution.
+
+## Module 05 SFRA
+
+**Purpose:** Measure long-context retrieval and cross-reference integrity in
+SEC filing footnotes.
+
+**Contract:** Resolve benchmark questions through declared footnote, table, and
+cross-reference graphs. Verify citations and numbers against source coordinates
+and report accuracy by document-position bucket to expose lost-in-the-middle
+degradation.
+
+**Reject when:** a required reference is unresolved, the answer contradicts its
+linked table, or filing identity and source coordinates are absent.
+
+## Module 06 TLAB
+
+**Purpose:** Audit generated API integrations and chained tool execution
+against a versioned technical contract.
+
+**Contract:** Parse generated code and structured execution traces. Verify API
+version, endpoint, method, payload, authentication, retry behavior, error
+handling, and mandatory extract/search/calculate steps. Missing specification
+files fail closed and are never replaced with invented defaults.
+
+**Reject when:** generated code targets an incompatible schema, omits security
+or rate-limit controls, skips a mandatory step, or reports a fabricated tool
+success.
+
+## Module 07 BLSB
+
+**Purpose:** Evaluate GTM and operating-strategy artifacts for empirical
+grounding, actionability, and downside controls.
+
+**Contract:** Trace quantified claims to sources and evaluate segment choice,
+value proposition, channel, unit economics, resources, owner, timing, risk
+mitigation, and exit criteria. Buzzword density is only a secondary indicator.
+
+**Reject when:** a material recommendation lacks evidence or ownership, unit
+economics and capacity are absent, or promotional language replaces measurable
+actions.
+
+## Module 08 FOAS
+
+**Purpose:** Reconcile ledgers, trial balances, adjustments, and internal-control
+artifacts to cent-level accounting identities.
+
+**Contract:** Use decimal arithmetic to aggregate debits and credits by entity,
+account, currency, and period. Reconcile subledgers to the trial balance and
+every adjustment to balanced source rows. The default monetary tolerance is
+0.01 in the declared currency.
+
+**Reject when:** the ledger is out of balance, an adjustment lacks traceability,
+or currencies, entities, or periods are mixed without normalization.
+
+## Module 09 FITV
+
+**Purpose:** Validate bond price, modified duration, DV01, and the written
+rate-risk conclusion under one declared market convention.
+
+**Contract:** Discount contractual cash flows using the supplied settlement,
+day-count, coupon-frequency, yield, and clean-or-dirty price basis. Calculate
+Macaulay duration, modified duration, and DV01 from the same basis. Metric-level
+tolerances must be explicit and may default to 0.5% relative error.
+
+**Reject when:** a metric exceeds tolerance, conventions are mixed, or the
+narrative shock direction contradicts the calculated exposure.
+
+## Module 10 OAPE
+
+**Purpose:** Perform deterministic pairwise evaluation of XLSX, DOCX, and PPTX
+artifacts.
+
+**Contract:** Inspect formulas, package relationships, slide geometry, fonts,
+metadata, and controlled render results. Apply a severity matrix to both
+candidates and permit a tie. Metadata alone cannot establish absence of visual
+overlap.
+
+**Reject when:** a candidate contains broken formulas, invalid relationships,
+clipping or overlap, comparison settings are not equivalent, or an arbitrary
+winner is selected from equal scores.
+
+## Module 11 CVIB
+
+**Purpose:** Audit DCF and trading-comparable outputs against declared valuation
+assumptions.
+
+**Contract:** Recalculate forecast cash-flow present values, terminal value,
+enterprise-to-equity bridge, diluted per-share value, and selected multiples.
+WACC must exceed terminal growth. Currency, valuation date, share basis, and
+trailing-versus-forward denominator must remain consistent. Output tolerance
+may default to 2% while equation-level tolerances remain stricter.
+
+**Reject when:** the DCF is mathematically undefined, outputs exceed tolerance,
+or the AI mixes dates, currencies, numerator bases, or denominator periods.
 
 ## Module 12 IRTA
 
@@ -241,6 +417,112 @@ and `99.9% -> 3.09`.
 Reject when either value deviates by more than the greater of one percent or
 0.01 units. Reject independently when the artifact uses the linear shortcut
 `z * (demand_std + lead_time_std)`.
+
+## Module 16 AMWE
+
+**Purpose:** Detect temporal leakage, invalid validation splits, and misleading
+metrics in applied ML workflows.
+
+**Contract:** Compare feature-availability times with prediction and target
+times, inspect split indices, and require chronological or purged validation
+for time-dependent or overlapping-label datasets. Materially imbalanced
+classification cannot be optimized and reported using accuracy alone.
+
+**Reject when:** future information enters a feature or preprocessing statistic,
+random K-fold is used without an approved exception, or the selected metric is
+misaligned with the target distribution.
+
+## Module 17 ERCA
+
+**Purpose:** Audit enterprise AI controls against a source-identified
+COSO-style risk, control, and compliance matrix.
+
+**Contract:** Map each material risk to a control objective, owner, frequency,
+evidence, and escalation path. Distinguish control design from operating
+effectiveness. Regulatory requirements must identify jurisdiction, effective
+date, and primary source.
+
+**Reject when:** a mandatory risk lacks a control or owner, operating
+effectiveness is claimed from design documentation alone, or regulatory
+provenance is incomplete.
+
+## Module 18 IBDV
+
+**Name:** Investment-Banking Deal Validation
+
+**Purpose:** Detect enterprise-value bridge errors in M&A precedent
+transactions, transaction summaries, and AI-generated valuation work.
+
+### Deterministic Equation
+
+```text
+enterprise_value
+  = equity_value
+  + total_debt
+  - cash_and_equivalents
+  + preferred_stock
+  + non_controlling_interests
+```
+
+All components must use the same currency and valuation date. Equity value,
+debt, cash, preferred stock, and non-controlling interests are non-negative.
+Enterprise value itself may be negative for a net-cash company.
+
+### Required Inputs
+
+AI output:
+
+- `calculated_enterprise_value`.
+
+Ground truth:
+
+- `equity_value`;
+- `total_debt`;
+- `cash_and_equivalents`;
+- `preferred_stock`;
+- `non_controlling_interests`;
+- `reported_enterprise_value`;
+- `currency`, as a three-letter alphabetic code;
+- `equity_value_basis`, identifying market capitalization, offer
+  consideration, or transaction equity value;
+- `source_id`;
+- `valuation_date`, formatted as ISO-8601 `YYYY-MM-DD`;
+- optional non-negative `absolute_tolerance`;
+- optional non-negative `relative_tolerance`.
+
+### Ground-Truth Gate
+
+The kernel first reconciles `reported_enterprise_value` to the deterministic
+bridge. If the supplied benchmark does not tie, execution stops. Missing
+components are never silently replaced with zero.
+
+### Omission Detection and Scoring
+
+- `5.0 / APPROVED`: AI EV reconciles within tolerance.
+- `3.0 / REJECTED`: AI EV exceeds tolerance without matching a deterministic
+  omission pattern.
+- `1.5 / REJECTED`: AI EV exactly matches a bridge omitting either preferred
+  stock or non-controlling interests.
+- `1.0 / REJECTED`: AI EV exactly matches
+  `equity_value + total_debt - cash_and_equivalents`, omitting both preferred
+  stock and non-controlling interests.
+
+The scorecard reports the omitted components, equation delta, source,
+valuation date, currency, equity-value basis, every bridge component, and the
+ground-truth reconciliation delta.
+
+### Declared Bridge Scope
+
+This version validates the five-component bridge above. Lease liabilities,
+unfunded pensions, associate investments, tax assets, earn-outs, and other
+debt-like or non-operating adjustments are not silently inferred. A transaction
+requiring those adjustments must extend the ingestion schema and deterministic
+equation before it is evaluated.
+
+IBDV does not download market data or fabricate missing capital structure
+items. Filing selection, transaction-date share counts, FX normalization,
+source licensing, and deal-term extraction belong in a provenance-aware
+ingestion adapter.
 
 ## Institutional Scorecard
 

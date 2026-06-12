@@ -13,6 +13,9 @@ evaluation kernels are implemented:
 - four required kernel layers;
 - an external 55-enterprise telemetry configuration;
 - an immutable registry covering module IDs 1 through 18;
+- a machine-readable specification catalog covering every module's inputs,
+  deterministic rules, tolerance policy, rejection conditions, outputs, and
+  data boundary;
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
 - a DST-aware three-market timestamp matrix;
 - a machine-verifiable institutional publication contract;
@@ -20,9 +23,10 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-IRTA, BMAE, CFIA, and SCGV are implemented and registered; the remaining 14
-modules remain explicitly `SPECIFIED` until their complete schemas, tolerance
-policies, and adversarial fixtures are implemented.
+IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the remaining
+13 modules have complete specification contracts but remain explicitly
+`SPECIFIED` until their executable auditors and adversarial fixtures are
+implemented.
 
 ## Required Structure
 
@@ -59,6 +63,7 @@ templates/
   deep_dive_whitepaper.md
 src/
   base_auditor.py
+  kernel_spec_catalog.py
   main_pipeline.py
   market_clock.py
   module_manifest.py
@@ -92,6 +97,8 @@ python3 -m coverage report --fail-under=80
 
 The canonical formulas and rejection contracts are documented in
 [`docs/MASTER_SPEC.md`](docs/MASTER_SPEC.md).
+The corresponding CI-verifiable records live in
+[`src/kernel_spec_catalog.py`](src/kernel_spec_catalog.py).
 
 Implemented accounting kernels consume explicit, source-identified inputs.
 They do not download market data, substitute fabricated fallback values, or
@@ -152,3 +159,6 @@ Every production kernel must:
 A module may be changed from `SPECIFIED` to `IMPLEMENTED` only after its input
 schema, deterministic equation or regulatory rule, tolerance policy, fixtures,
 and implementation path have all been reviewed and tested.
+
+`SPECIFIED` means the module has a complete entry in
+`src/kernel_spec_catalog.py`; it does not mean executable kernel code exists.

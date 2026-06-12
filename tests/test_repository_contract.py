@@ -28,6 +28,7 @@ class RepositoryStructureTests(unittest.TestCase):
     def test_required_src_entrypoints_exist(self) -> None:
         for filename in (
             "base_auditor.py",
+            "kernel_spec_catalog.py",
             "main_pipeline.py",
             "market_clock.py",
             "output_standard.py",
@@ -96,6 +97,55 @@ class RepositoryStructureTests(unittest.TestCase):
         module = get_module_spec(12)
         self.assertEqual(module.code, "IRTA")
         self.assertEqual(module.layer, "layer_4_strategy")
+
+    def test_all_eighteen_modules_have_complete_machine_readable_specs(self) -> None:
+        from src.kernel_spec_catalog import KERNEL_SPECIFICATIONS
+        from src.module_manifest import MODULE_SPECS
+
+        self.assertEqual(len(KERNEL_SPECIFICATIONS), 18)
+        self.assertEqual(
+            {spec.module_id for spec in KERNEL_SPECIFICATIONS},
+            {spec.module_id for spec in MODULE_SPECS},
+        )
+        self.assertEqual(
+            {spec.code for spec in KERNEL_SPECIFICATIONS},
+            {spec.code for spec in MODULE_SPECS},
+        )
+
+        for specification in KERNEL_SPECIFICATIONS:
+            with self.subTest(module=specification.code):
+                self.assertTrue(specification.problem_statement)
+                self.assertTrue(specification.ai_inputs)
+                self.assertTrue(specification.ground_truth_inputs)
+                self.assertTrue(specification.deterministic_rules)
+                self.assertTrue(specification.tolerance_policy)
+                self.assertTrue(specification.rejection_conditions)
+                self.assertTrue(specification.outputs)
+                self.assertTrue(specification.data_boundary)
+
+    def test_attachment_numbering_conflicts_are_explicitly_reconciled(self) -> None:
+        from src.kernel_spec_catalog import get_kernel_spec
+
+        self.assertIn("RSSF", get_kernel_spec(13).source_aliases)
+        self.assertIn("FLIB", get_kernel_spec(6).source_aliases)
+        self.assertIn("SCGV-17", get_kernel_spec(15).source_aliases)
+
+    def test_kernel_spec_catalog_passes_its_own_validator(self) -> None:
+        from src.kernel_spec_catalog import validate_kernel_spec_catalog
+
+        self.assertEqual(validate_kernel_spec_catalog(), ())
+
+    def test_master_spec_has_a_section_for_every_canonical_module(self) -> None:
+        from src.module_manifest import MODULE_SPECS
+
+        master_spec = (ROOT / "docs" / "MASTER_SPEC.md").read_text(
+            encoding="utf-8"
+        )
+        for specification in MODULE_SPECS:
+            heading = (
+                f"## Module {specification.module_id:02d} {specification.code}"
+            )
+            self.assertIn(heading, master_spec)
 
 
 class BaseAuditorContractTests(unittest.TestCase):
@@ -176,6 +226,7 @@ class StandaloneScriptTests(unittest.TestCase):
         commands = (
             [sys.executable, str(SRC / "base_auditor.py")],
             [sys.executable, str(SRC / "market_clock.py")],
+            [sys.executable, str(SRC / "kernel_spec_catalog.py"), "--module", "1"],
             [sys.executable, str(SRC / "module_manifest.py"), "--module", "12"],
             [
                 sys.executable,

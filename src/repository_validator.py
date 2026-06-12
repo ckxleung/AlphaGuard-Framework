@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.module_manifest import MODULE_SPECS, validate_manifest
+from src.kernel_spec_catalog import validate_kernel_spec_catalog
 from src.output_standard import validate_publication_artifact
 
 
@@ -57,6 +58,7 @@ def _validate_kernel_file(path: Path) -> tuple[str, ...]:
 def validate_repository(root: Path = ROOT) -> dict[str, Any]:
     """Validate structure, manifest, and all registered implementations."""
     errors = list(validate_manifest())
+    errors.extend(validate_kernel_spec_catalog())
     kernel_root = root / "evaluation_kernels"
     target_config = root / TARGET_ENTERPRISE_CONFIG.relative_to(ROOT)
 

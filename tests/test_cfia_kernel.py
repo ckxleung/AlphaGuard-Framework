@@ -199,7 +199,9 @@ class CorporateFinancialAuditorIntegrationTests(unittest.TestCase):
         scorecard = json.loads(result.stdout)
         self.assertEqual(scorecard["data_quality_status"], "APPROVED")
 
-    def test_layer_two_smoke_executes_cfia_without_fake_scorecards(self) -> None:
+    def test_layer_two_smoke_executes_available_kernels_without_fake_scorecards(
+        self,
+    ) -> None:
         from datetime import datetime, timezone
 
         from src.main_pipeline import run_daily_smoke
@@ -212,11 +214,11 @@ class CorporateFinancialAuditorIntegrationTests(unittest.TestCase):
         scorecards = report["forensic_audit_scorecard"]
         self.assertEqual(
             [scorecard["kernel_id"] for scorecard in scorecards],
-            ["Module_14_CFIA"],
+            ["Module_14_CFIA", "Module_18_IBDV"],
         )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_11_CVIB", "Module_18_IBDV"],
+            ["Module_11_CVIB"],
         )
 
 

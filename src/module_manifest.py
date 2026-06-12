@@ -38,7 +38,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(15, "SCGV", "Supply Chain GenAI Validator", "layer_4_strategy", "SupplyChainAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_15_SCGV/supply_chain_auditor.py"),
     ModuleSpec(16, "AMWE", "AI Model Walk-Forward Evaluation", "layer_3_compliance", "TimeSeriesLeakageAuditor", "SPECIFIED"),
     ModuleSpec(17, "ERCA", "Enterprise Risk and Compliance Audit", "layer_3_compliance", "EnterpriseComplianceAuditor", "SPECIFIED"),
-    ModuleSpec(18, "IBDV", "Investment-Banking Deal Validation", "layer_2_valuation", "InvestmentBankingDealAuditor", "SPECIFIED"),
+    ModuleSpec(18, "IBDV", "Investment-Banking Deal Validation", "layer_2_valuation", "InvestmentBankingDealAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_18_IBDV/ibdv_auditor.py"),
 )
 
 

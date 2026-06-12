@@ -225,7 +225,7 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_four_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_five_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
@@ -233,6 +233,7 @@ class ManifestIntegrationTests(unittest.TestCase):
             {
                 "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
                 "reported_operating_cash_flow": 5_080_000_000,
+                "calculated_enterprise_value": 168_000_000_000,
                 "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
                 "rating": "Buy",
                 "reorder_point": 1000.0 + safety_stock,
@@ -252,6 +253,14 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "currency": "USD",
                 "source_id": "SYNTHETIC-PIPELINE-FIXTURE",
                 "fiscal_period_end": "2026-03-31",
+                "equity_value": 150_000_000_000,
+                "total_debt": 25_000_000_000,
+                "cash_and_equivalents": 12_000_000_000,
+                "preferred_stock": 500_000_000,
+                "non_controlling_interests": 4_500_000_000,
+                "reported_enterprise_value": 168_000_000_000,
+                "equity_value_basis": "SYNTHETIC_MARKET_CAPITALIZATION",
+                "valuation_date": "2026-06-12",
                 "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
                 "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
                 "discussion_volume": [100.0, 110.0, 120.0, 130.0],
@@ -264,8 +273,11 @@ class ManifestIntegrationTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(report["executed_modules"], 4)
-        self.assertEqual(set(report["results"]), {"IRTA", "BMAE", "CFIA", "SCGV"})
+        self.assertEqual(report["executed_modules"], 5)
+        self.assertEqual(
+            set(report["results"]),
+            {"IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
+        )
         self.assertTrue(
             all(
                 scorecard["data_quality_status"] == "APPROVED"
