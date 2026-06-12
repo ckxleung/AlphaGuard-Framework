@@ -109,6 +109,8 @@ The canonical formulas and rejection contracts are documented in
 [`docs/MASTER_SPEC.md`](docs/MASTER_SPEC.md).
 The corresponding CI-verifiable records live in
 [`src/kernel_spec_catalog.py`](src/kernel_spec_catalog.py).
+The implementation order and promotion gates are tracked in
+[`docs/KERNEL_IMPLEMENTATION_ROADMAP.md`](docs/KERNEL_IMPLEMENTATION_ROADMAP.md).
 
 Implemented accounting kernels consume explicit, source-identified inputs.
 They do not download market data, substitute fabricated fallback values, or
@@ -180,6 +182,9 @@ and implementation path have all been reviewed and tested.
 
 `SPECIFIED` means the module has a complete entry in
 `src/kernel_spec_catalog.py`; it does not mean executable kernel code exists.
+
+The next recommended build wave is `FITV` and `CVIB`, which extends the current
+valuation lane around live `CFIA` and `IBDV` auditors.
 
 ## Open-Core Security Boundary
 

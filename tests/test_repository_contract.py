@@ -162,6 +162,40 @@ class RepositoryStructureTests(unittest.TestCase):
             )
             self.assertIn(heading, master_spec)
 
+    def test_kernel_implementation_roadmap_matches_manifest(self) -> None:
+        from src.module_manifest import MODULE_SPECS
+
+        roadmap_path = ROOT / "docs" / "KERNEL_IMPLEMENTATION_ROADMAP.md"
+        roadmap = roadmap_path.read_text(encoding="utf-8")
+
+        self.assertIn("## Implementation Matrix", roadmap)
+        self.assertIn("## Recommended Build Sequence", roadmap)
+        self.assertIn("## Promotion Checklist", roadmap)
+        self.assertIn("Production auditors live: 5.", roadmap)
+        self.assertIn("Specified auditors awaiting implementation: 13.", roadmap)
+
+        for specification in MODULE_SPECS:
+            expected_row = (
+                f"| {specification.module_id:02d} | {specification.code} | "
+                f"{specification.layer} | {specification.status} |"
+            )
+            self.assertIn(expected_row, roadmap)
+
+    def test_kernel_roadmap_prioritizes_next_build_wave(self) -> None:
+        roadmap = (
+            ROOT / "docs" / "KERNEL_IMPLEMENTATION_ROADMAP.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn(
+            "| 09 | FITV | layer_2_valuation | SPECIFIED | Wave 1 |",
+            roadmap,
+        )
+        self.assertIn(
+            "| 11 | CVIB | layer_2_valuation | SPECIFIED | Wave 1 |",
+            roadmap,
+        )
+        self.assertIn("Module_18_IBDV", roadmap)
+
 
 class BaseAuditorContractTests(unittest.TestCase):
     def test_base_auditor_requires_execute_audit(self) -> None:
