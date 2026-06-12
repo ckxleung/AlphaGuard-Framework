@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import importlib.util
 import subprocess
 import sys
@@ -23,6 +24,10 @@ class RepositoryStructureTests(unittest.TestCase):
         )
         for directory in expected:
             self.assertTrue((ROOT / "evaluation_kernels" / directory).is_dir())
+
+    def test_required_src_entrypoints_exist(self) -> None:
+        for filename in ("base_auditor.py", "main_pipeline.py", "telemetry_router.py"):
+            self.assertTrue((SRC / filename).is_file(), filename)
 
     def test_manifest_covers_exactly_eighteen_unique_module_ids(self) -> None:
         from src.module_manifest import MODULE_SPECS
@@ -140,6 +145,25 @@ class StandaloneScriptTests(unittest.TestCase):
                 0,
                 f"{' '.join(command)} failed:\n{result.stderr}",
             )
+
+    def test_main_pipeline_no_args_runs_daily_smoke_json(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(SRC / "main_pipeline.py")],
+            cwd=ROOT.parent,
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("ALPHAGUARD FRAMEWORK: AUTOMATED DAILY AUDIT PIPELINE RUN", result.stdout)
+        json_start = result.stdout.index("{")
+        json_end = result.stdout.rindex("}") + 1
+        payload = json.loads(result.stdout[json_start:json_end])
+        self.assertEqual(payload["routing_specs"]["ticker"], "NVDA")
+        self.assertTrue(payload["substack_ready_flag"])
+        self.assertGreaterEqual(len(payload["forensic_audit_scorecard"]), 1)
 
 
 if __name__ == "__main__":

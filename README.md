@@ -33,6 +33,7 @@ src/
   main_pipeline.py
   module_manifest.py
   repository_validator.py
+  telemetry_router.py
 tests/
 docs/
 ```
@@ -43,6 +44,7 @@ docs/
 python3 -m unittest discover -s tests -p "test_*.py"
 python3 -m src.repository_validator
 python3 -m src.main_pipeline --validate-only
+python3 src/main_pipeline.py
 ```
 
 Coverage verification:
