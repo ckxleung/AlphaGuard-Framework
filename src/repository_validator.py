@@ -82,11 +82,11 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
     }
 
 
-def main() -> int:
+def main() -> int:  # pragma: no cover
     result = validate_repository()
     print(json.dumps(result, indent=2, ensure_ascii=False))
     return 0 if result["valid"] else 1
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())

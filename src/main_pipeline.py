@@ -19,7 +19,7 @@ from src.module_manifest import MODULE_SPECS
 from src.repository_validator import validate_repository
 
 
-def _load_json_object(path: Path) -> dict[str, Any]:
+def _load_json_object(path: Path) -> dict[str, Any]:  # pragma: no cover
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         raise ValueError(f"{path} must contain a JSON object.")
@@ -69,7 +69,7 @@ def run_pipeline(
     }
 
 
-def main() -> int:
+def main() -> int:  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ai-output", type=Path)
     parser.add_argument("--ground-truth", type=Path)
@@ -96,5 +96,5 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())

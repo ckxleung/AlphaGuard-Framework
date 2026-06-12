@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import math
+import json
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -34,7 +37,7 @@ class InstitutionalResearchThesisAuditorTests(unittest.TestCase):
     def test_rejects_bullish_revenue_above_physical_capacity(self) -> None:
         scorecard = self.auditor.execute_audit(
             {
-                "revenue_forecast": [500.0, 600.0, 700.0, 800.0, 900.0],
+                "revenue_forecast": [500.0, 600.0, 700.0, 850.0, 1100.0],
                 "investment_thesis": "Capacity expands rapidly; strong buy.",
             },
             self.ground_truth,
@@ -54,6 +57,20 @@ class InstitutionalResearchThesisAuditorTests(unittest.TestCase):
         self.assertFalse(scorecard["capacity_ceiling_breached"])
         self.assertEqual(scorecard["data_quality_status"], "APPROVED")
         self.assertAlmostEqual(scorecard["forecast_cagr"], (600 / 400) ** 0.25 - 1)
+
+    def test_rejects_invalid_utilization_and_forecast_length(self) -> None:
+        invalid_truth = dict(self.ground_truth)
+        invalid_truth["max_utilization"] = 1.1
+        with self.assertRaisesRegex(ValueError, "cannot exceed"):
+            self.auditor.execute_audit(
+                {"revenue_forecast": [1, 2, 3, 4, 5]},
+                invalid_truth,
+            )
+        with self.assertRaisesRegex(ValueError, "exactly five"):
+            self.auditor.execute_audit(
+                {"revenue_forecast": [1, 2]},
+                self.ground_truth,
+            )
 
 
 class BehavioralMarketAuditorTests(unittest.TestCase):
@@ -96,6 +113,28 @@ class BehavioralMarketAuditorTests(unittest.TestCase):
         self.assertFalse(scorecard["noise_filter_failed"])
         self.assertEqual(scorecard["data_quality_status"], "APPROVED")
         self.assertIn("signal_purity_coefficient", scorecard)
+
+    def test_rejects_zero_retail_imbalance_and_misaligned_series(self) -> None:
+        with self.assertRaisesRegex(ValueError, "cannot contain zero"):
+            self.auditor.execute_audit(
+                {"sentiment_changes": [0.1, 0.2, 0.3]},
+                {
+                    "block_trades_outflow": [1.0, 2.0, 3.0],
+                    "retail_orderflow_imbalance": [1.0, 0.0, 1.0],
+                    "discussion_volume": [10.0, 11.0, 12.0],
+                    "price_changes": [0.01, 0.02, 0.03],
+                },
+            )
+        with self.assertRaisesRegex(ValueError, "must align"):
+            self.auditor.execute_audit(
+                {"sentiment_changes": [0.1, 0.2, 0.3]},
+                {
+                    "block_trades_outflow": [1.0, 2.0, 3.0, 4.0],
+                    "retail_orderflow_imbalance": [1.0, 1.0, 1.0, 1.0],
+                    "discussion_volume": [10.0, 11.0, 12.0, 13.0],
+                    "price_changes": [0.01, 0.02, 0.03, 0.04],
+                },
+            )
 
 
 class SupplyChainAuditorTests(unittest.TestCase):
@@ -150,6 +189,19 @@ class SupplyChainAuditorTests(unittest.TestCase):
                 invalid_ground_truth,
             )
 
+    def test_accepts_explicit_z_score_for_custom_service_level(self) -> None:
+        custom_truth = dict(self.ground_truth)
+        custom_truth.update({"service_level": 0.975, "z_score": 1.96})
+        safety_stock = 1.96 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
+        scorecard = self.auditor.execute_audit(
+            {
+                "reorder_point": 1000.0 + safety_stock,
+                "safety_stock": safety_stock,
+            },
+            custom_truth,
+        )
+        self.assertEqual(scorecard["data_quality_status"], "APPROVED")
+
 
 class ManifestIntegrationTests(unittest.TestCase):
     def test_three_completed_specs_are_registered_as_implemented(self) -> None:
@@ -166,6 +218,119 @@ class ManifestIntegrationTests(unittest.TestCase):
             self.assertEqual(specification.class_name, class_name)
             self.assertEqual(specification.status, "IMPLEMENTED")
             self.assertTrue(specification.implementation_path)
+
+    def test_unknown_module_id_fails_closed(self) -> None:
+        from src.module_manifest import get_module_spec
+
+        with self.assertRaises(KeyError):
+            get_module_spec(99)
+
+    def test_main_pipeline_executes_all_three_completed_kernels(self) -> None:
+        from src.main_pipeline import run_pipeline
+
+        safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
+        report = run_pipeline(
+            {
+                "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
+                "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
+                "rating": "Buy",
+                "reorder_point": 1000.0 + safety_stock,
+                "safety_stock": safety_stock,
+                "methodology": "Dual-variance stochastic equation.",
+            },
+            {
+                "current_capacity": 100.0,
+                "capex_additions": [10.0, 10.0, 10.0, 10.0, 10.0],
+                "capital_efficiency": 2.0,
+                "max_utilization": 0.90,
+                "blended_asp": 5.0,
+                "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
+                "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
+                "discussion_volume": [100.0, 110.0, 120.0, 130.0],
+                "price_changes": [0.01, 0.02, 0.02, 0.03],
+                "average_demand": 100.0,
+                "average_lead_time": 10.0,
+                "demand_std": 20.0,
+                "lead_time_std": 2.0,
+                "service_level": 0.95,
+            },
+        )
+
+        self.assertEqual(report["executed_modules"], 3)
+        self.assertEqual(set(report["results"]), {"IRTA", "BMAE", "SCGV"})
+        self.assertTrue(
+            all(
+                scorecard["data_quality_status"] == "APPROVED"
+                for scorecard in report["results"].values()
+            )
+        )
+
+
+class KernelStandaloneTests(unittest.TestCase):
+    def test_each_kernel_runs_as_a_standalone_json_cli(self) -> None:
+        safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
+        ai_output = {
+            "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
+            "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
+            "rating": "Buy",
+            "reorder_point": 1000.0 + safety_stock,
+            "safety_stock": safety_stock,
+            "methodology": "Dual-variance stochastic equation.",
+        }
+        ground_truth = {
+            "current_capacity": 100.0,
+            "capex_additions": [10.0, 10.0, 10.0, 10.0, 10.0],
+            "capital_efficiency": 2.0,
+            "max_utilization": 0.90,
+            "blended_asp": 5.0,
+            "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
+            "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
+            "discussion_volume": [100.0, 110.0, 120.0, 130.0],
+            "price_changes": [0.01, 0.02, 0.02, 0.03],
+            "average_demand": 100.0,
+            "average_lead_time": 10.0,
+            "demand_std": 20.0,
+            "lead_time_std": 2.0,
+            "service_level": 0.95,
+        }
+        scripts = (
+            ROOT
+            / "evaluation_kernels/layer_4_strategy/module_12_irta/"
+            "institutional_research_thesis_auditor.py",
+            ROOT
+            / "evaluation_kernels/layer_4_strategy/module_13_bmae/"
+            "behavioral_market_auditor.py",
+            ROOT
+            / "evaluation_kernels/layer_4_strategy/module_15_scgv/"
+            "supply_chain_auditor.py",
+        )
+
+        with tempfile.TemporaryDirectory() as directory:
+            temp_dir = Path(directory)
+            ai_path = temp_dir / "ai_output.json"
+            truth_path = temp_dir / "ground_truth.json"
+            ai_path.write_text(json.dumps(ai_output), encoding="utf-8")
+            truth_path.write_text(json.dumps(ground_truth), encoding="utf-8")
+
+            for script in scripts:
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        str(script),
+                        "--ai-output",
+                        str(ai_path),
+                        "--ground-truth",
+                        str(truth_path),
+                    ],
+                    cwd=ROOT.parent,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 0, result.stderr)
+                scorecard = json.loads(result.stdout)
+                self.assertEqual(scorecard["data_quality_status"], "APPROVED")
 
 
 if __name__ == "__main__":

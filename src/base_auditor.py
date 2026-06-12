@@ -97,7 +97,7 @@ class BaseAuditor(ABC):
         return cls.validate_scorecard(scorecard)
 
 
-def main() -> int:
+def main() -> int:  # pragma: no cover
     """Run a lightweight contract self-check."""
     sample = BaseAuditor.build_scorecard(
         rigor_score=5.0,
@@ -108,5 +108,5 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())

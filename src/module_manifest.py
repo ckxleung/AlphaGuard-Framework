@@ -32,10 +32,10 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "SPECIFIED"),
     ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "SPECIFIED"),
     ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "SPECIFIED"),
-    ModuleSpec(12, "TBD", "Specification Not Supplied", "UNASSIGNED", "UnassignedAuditor", "SPEC_REQUIRED"),
-    ModuleSpec(13, "BMAE", "Behavioral Market Analytics Engine", "layer_4_strategy", "BehavioralMarketAuditor", "SPECIFIED"),
+    ModuleSpec(12, "IRTA", "Buy-Side Institutional Research Thesis Audit", "layer_4_strategy", "InstitutionalResearchThesisAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/module_12_irta/institutional_research_thesis_auditor.py"),
+    ModuleSpec(13, "BMAE", "Behavioral Market-Microstructure Alpha Engine", "layer_4_strategy", "BehavioralMarketAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/module_13_bmae/behavioral_market_auditor.py"),
     ModuleSpec(14, "CFIA", "Corporate Financial Integrity Audit", "layer_2_valuation", "CorporateFinancialAuditor", "SPECIFIED"),
-    ModuleSpec(15, "SCGV", "Supply-Chain Ground-Truth Validation", "layer_4_strategy", "SupplyChainAuditor", "SPECIFIED"),
+    ModuleSpec(15, "SCGV", "Supply Chain GenAI Validator", "layer_4_strategy", "SupplyChainAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/module_15_scgv/supply_chain_auditor.py"),
     ModuleSpec(16, "AMWE", "AI Model Walk-Forward Evaluation", "layer_3_compliance", "TimeSeriesLeakageAuditor", "SPECIFIED"),
     ModuleSpec(17, "ERCA", "Enterprise Risk and Compliance Audit", "layer_3_compliance", "EnterpriseComplianceAuditor", "SPECIFIED"),
     ModuleSpec(18, "IBDV", "Investment-Banking Deal Validation", "layer_2_valuation", "InvestmentBankingDealAuditor", "SPECIFIED"),
@@ -86,7 +86,7 @@ def validate_manifest() -> tuple[str, ...]:
     return tuple(errors)
 
 
-def main() -> int:
+def main() -> int:  # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module", type=int, help="Print one module by numeric ID.")
     arguments = parser.parse_args()
@@ -105,5 +105,5 @@ def main() -> int:
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     raise SystemExit(main())

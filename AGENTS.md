@@ -57,9 +57,10 @@ python3 -m src.main_pipeline --validate-only
 
 - Never invent missing financial equations, regulatory obligations, tolerance
   ceilings, company routes, or fixtures.
-- Module 12 remains `SPEC_REQUIRED` until an approved specification is supplied.
-- The source brief duplicated Module 07; do not treat that duplication as an
-  eighteenth unique module.
+- Module 12 is IRTA and belongs to Layer 4.
+- Module 13 BMAE and Module 15 SCGV are strengthened specifications of existing
+  unique IDs, not additional nineteenth or twentieth modules.
+- The repaired matrix contains exactly 18 unique IDs.
 - A module description is not sufficient for production status. Require input
   schema, deterministic rule, tolerance policy, and test fixtures.
 

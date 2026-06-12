@@ -15,9 +15,10 @@ evaluation kernels are implemented:
 - placeholder and structure validation;
 - a one-command pipeline entry point.
 
-The supplied source specification defines 17 unique module codes. Module 12 was
-not supplied and is deliberately marked `SPEC_REQUIRED`. No fabricated business
-logic is treated as production-ready.
+The repaired source specification now defines all 18 unique module codes.
+IRTA, BMAE, and SCGV are implemented and registered; the remaining 15 modules
+remain explicitly `SPECIFIED` until their complete schemas, tolerance policies,
+and adversarial fixtures are implemented.
 
 ## Required Structure
 
@@ -33,6 +34,7 @@ src/
   module_manifest.py
   repository_validator.py
 tests/
+docs/
 ```
 
 ## Quick Start
@@ -42,6 +44,17 @@ python3 -m unittest discover -s tests -p "test_*.py"
 python3 -m src.repository_validator
 python3 -m src.main_pipeline --validate-only
 ```
+
+Coverage verification:
+
+```bash
+python3 -m pip install -r requirements-dev.txt
+python3 -m coverage run --source=src,evaluation_kernels -m unittest discover -s tests
+python3 -m coverage report --fail-under=80
+```
+
+The canonical formulas and rejection contracts are documented in
+[`docs/MASTER_SPEC.md`](docs/MASTER_SPEC.md).
 
 ## Kernel Contract
 

@@ -12,8 +12,17 @@ from src.module_manifest import MODULE_SPECS
 
 
 def main() -> int:
-    modules = [spec.code for spec in MODULE_SPECS if spec.layer == "layer_4_strategy"]
-    print(",".join(modules))
+    modules = [
+        {
+            "code": spec.code,
+            "status": spec.status,
+        }
+        for spec in MODULE_SPECS
+        if spec.layer == "layer_4_strategy"
+    ]
+    import json
+
+    print(json.dumps(modules, indent=2))
     return 0
 
 
