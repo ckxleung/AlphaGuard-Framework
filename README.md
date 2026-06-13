@@ -29,8 +29,8 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the remaining
-13 modules have complete specification contracts but remain explicitly
+FITV, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the
+remaining 12 modules have complete specification contracts but remain explicitly
 `SPECIFIED` until their executable auditors and adversarial fixtures are
 implemented.
 
@@ -97,6 +97,7 @@ python3 -m src.repository_validator
 python3 -m src.main_pipeline --validate-only
 python3 src/main_pipeline.py
 python3 src/monitoring_control_plane.py --event examples/monitoring_event.example.json
+python3 src/monitoring_control_plane.py --event examples/monitoring_event.rate_shock.synthetic.json --module-payloads examples/module_payloads.rate_shock.synthetic.json
 python3 src/monitoring_control_plane.py --portfolio-baseline
 python3 src/output_standard.py examples/publication_artifact.example.json
 python3 src/source_registry.py config/source_registry.json
@@ -195,8 +196,8 @@ and implementation path have all been reviewed and tested.
 `SPECIFIED` means the module has a complete entry in
 `src/kernel_spec_catalog.py`; it does not mean executable kernel code exists.
 
-The next recommended build wave is `FITV` and `CVIB`, which extends the current
-valuation lane around live `CFIA` and `IBDV` auditors.
+The next recommended build target is `CVIB`, which completes Wave 1 around live
+`FITV`, `CFIA`, and `IBDV` valuation auditors.
 
 ## Open-Core Security Boundary
 

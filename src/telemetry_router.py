@@ -18,7 +18,7 @@ DEFAULT_EVENT_POLICY = ROOT / "config" / "event_routing_policy.json"
 
 LAYER_KERNELS = {
     "Layer_1_Technical_Telemetry": ("Module_05_SFRA", "Module_06_TLAB", "Module_10_OAPE"),
-    "Layer_2_Quantitative_Valuation": ("Module_11_CVIB", "Module_14_CFIA", "Module_18_IBDV"),
+    "Layer_2_Quantitative_Valuation": ("Module_09_FITV", "Module_11_CVIB", "Module_14_CFIA", "Module_18_IBDV"),
     "Layer_3_Regulatory_Compliance": ("Module_17_ERCA", "Module_01_FRTE", "Module_08_FOAS"),
     "Layer_4_Institutional_Strategy": ("Module_12_IRTA", "Module_13_BMAE", "Module_15_SCGV"),
 }
@@ -34,6 +34,7 @@ EVENT_PRIORITIES = {
     "MODEL_RELEASE": "MODEL_RELEASE_TELEMETRY_ALARM",
     "EARNINGS_RELEASE": "CRITICAL_ALPHA_CAPTURE",
     "FINANCING_MA": "CRITICAL_DEAL_VALIDATION",
+    "RATE_SHOCK": "FIXED_INCOME_REPRICING_ALARM",
     "REGULATORY_UPDATE": "HIGH_COMPLIANCE_ALARM",
     "REGULATORY_CHANGE": "HIGH_COMPLIANCE_ALARM",
     "SUPPLY_CHAIN_DISRUPTION": "SUPPLY_CHAIN_ALPHA_CAPTURE",

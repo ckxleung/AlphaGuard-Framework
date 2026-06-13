@@ -108,6 +108,23 @@ class MonitoringPolicyTests(unittest.TestCase):
                     "data_classification": "PLANNING_ONLY",
                 }
             )
+
+    def test_rate_shock_exposes_fitv_as_executable(self) -> None:
+        from src.monitoring_control_plane import plan_monitoring_event
+
+        plan = plan_monitoring_event(
+            {
+                "event_id": "evt-rate-shock-aapl",
+                "ticker": "AAPL",
+                "event_type": "RATE_SHOCK",
+                "observed_at": "2026-06-13T03:00:00Z",
+                "evidence_refs": [PUBLIC_DOCUMENT_ID],
+                "data_classification": "PUBLIC_SOURCE",
+            }
+        )
+
+        self.assertIn("FITV", plan["executable_modules"])
+        self.assertIn("CVIB", plan["unavailable_modules"])
         with self.assertRaisesRegex(ValueError, "ticker"):
             plan_monitoring_event(
                 {

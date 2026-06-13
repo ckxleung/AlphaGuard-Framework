@@ -105,6 +105,19 @@ class TelemetryRouterTests(unittest.TestCase):
             ],
         )
 
+    def test_rate_shock_routes_to_fixed_income_valuation_stack(self) -> None:
+        route = route_ticker("AAPL", market_event="rate_shock")
+
+        self.assertEqual(route["priority_level"], "FIXED_INCOME_REPRICING_ALARM")
+        self.assertEqual(
+            route["triggered_kernels"],
+            [
+                "Module_09_FITV",
+                "Module_11_CVIB",
+                "Module_14_CFIA",
+            ],
+        )
+
     def test_sh_and_ss_suffixes_are_normalized_against_target_universe(self) -> None:
         route_from_sh = route_ticker("603083.SH")
         route_from_ss = route_ticker("603083.SS")

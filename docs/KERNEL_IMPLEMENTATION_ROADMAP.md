@@ -16,8 +16,8 @@ canonical module appears here with the same status as the immutable manifest.
 
 - Monitored universe: 56 tickers in `config/target_enterprises.json`.
 - Architecture coverage: 18 canonical modules across four functional layers.
-- Production auditors live: 5.
-- Specified auditors awaiting implementation: 13.
+- Production auditors live: 6.
+- Specified auditors awaiting implementation: 12.
 - Shared runtime contract: `BaseAuditor.execute_audit(ai_output, ground_truth)`.
 - Publication contract: Markdown report plus JSON sidecar validated by
   `src/output_standard.py`.
@@ -34,7 +34,7 @@ canonical module appears here with the same status as the immutable manifest.
 | 06 | TLAB | layer_1_telemetry | SPECIFIED | Wave 2 | Versioned API schema and execution-trace fixtures |
 | 07 | BLSB | layer_4_strategy | SPECIFIED | Wave 5 | Strategy claim-evidence mapping and actionability fixtures |
 | 08 | FOAS | layer_3_compliance | SPECIFIED | Wave 2 | Cent-level ledger and adjustment traceability fixtures |
-| 09 | FITV | layer_2_valuation | SPECIFIED | Wave 1 | Bond cash-flow schedule with price, duration, and DV01 fixtures |
+| 09 | FITV | layer_2_valuation | IMPLEMENTED | Live | Bond price, duration, DV01, convention, and CLI tests passed |
 | 10 | OAPE | layer_1_telemetry | SPECIFIED | Wave 3 | Office package and rendered-layout pairwise fixtures |
 | 11 | CVIB | layer_2_valuation | SPECIFIED | Wave 1 | DCF, WACC, terminal-value, and per-share valuation fixtures |
 | 12 | IRTA | layer_4_strategy | IMPLEMENTED | Live | Capacity-ceiling and CAGR boundary tests passed |
@@ -49,10 +49,11 @@ canonical module appears here with the same status as the immutable manifest.
 
 ### Wave 1: Valuation Demonstration Depth
 
-Promote `FITV` and `CVIB` next. Together with implemented `CFIA` and `IBDV`,
-they complete the first high-value valuation demonstration lane:
+Promote `CVIB` next. Together with implemented `FITV`, `CFIA`, and `IBDV`, it
+completes the first high-value valuation demonstration lane:
 
-- `Module_09_FITV`: fixed-income price, modified duration, and DV01 checks;
+- `Module_09_FITV`: implemented fixed-income price, modified duration, and
+  DV01 checks;
 - `Module_11_CVIB`: DCF, terminal value, WACC, and per-share valuation checks.
 
 This wave is the most useful for buy-side, banking, and independent-research
@@ -131,4 +132,3 @@ then detects missing bridge components such as preferred stock and
 non-controlling interests. This is the standard expected of future valuation
 modules: deterministic formula, source provenance, declared tolerance, and
 explicit scorecard evidence.
-

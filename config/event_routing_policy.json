@@ -27,6 +27,11 @@
       "CVIB",
       "IRTA"
     ],
+    "RATE_SHOCK": [
+      "FITV",
+      "CVIB",
+      "CFIA"
+    ],
     "REGULATORY_UPDATE": [
       "ERCA",
       "FRTE",

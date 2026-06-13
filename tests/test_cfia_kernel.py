@@ -214,7 +214,7 @@ class CorporateFinancialAuditorIntegrationTests(unittest.TestCase):
         scorecards = report["forensic_audit_scorecard"]
         self.assertEqual(
             [scorecard["kernel_id"] for scorecard in scorecards],
-            ["Module_14_CFIA", "Module_18_IBDV"],
+            ["Module_09_FITV", "Module_14_CFIA", "Module_18_IBDV"],
         )
         self.assertEqual(
             report["unavailable_kernels"],

@@ -44,7 +44,9 @@ class RepositoryStructureTests(unittest.TestCase):
             ROOT / "config" / "event_routing_policy.json",
             ROOT / "docs" / "MONITORING_OPERATIONS.md",
             ROOT / "examples" / "monitoring_event.example.json",
+            ROOT / "examples" / "monitoring_event.rate_shock.synthetic.json",
             ROOT / "examples" / "module_payloads.financing.synthetic.json",
+            ROOT / "examples" / "module_payloads.rate_shock.synthetic.json",
             ROOT / "data" / "README.md",
             ROOT / "outputs" / "README.md",
         )
@@ -183,8 +185,8 @@ class RepositoryStructureTests(unittest.TestCase):
         self.assertIn("## Implementation Matrix", roadmap)
         self.assertIn("## Recommended Build Sequence", roadmap)
         self.assertIn("## Promotion Checklist", roadmap)
-        self.assertIn("Production auditors live: 5.", roadmap)
-        self.assertIn("Specified auditors awaiting implementation: 13.", roadmap)
+        self.assertIn("Production auditors live: 6.", roadmap)
+        self.assertIn("Specified auditors awaiting implementation: 12.", roadmap)
 
         for specification in MODULE_SPECS:
             expected_row = (
@@ -199,7 +201,7 @@ class RepositoryStructureTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            "| 09 | FITV | layer_2_valuation | SPECIFIED | Wave 1 |",
+            "| 09 | FITV | layer_2_valuation | IMPLEMENTED | Live |",
             roadmap,
         )
         self.assertIn(

@@ -1,0 +1,38 @@
+{
+  "FITV": {
+    "data_classification": "SYNTHETIC",
+    "evidence_refs": [
+      "DOC-SYNTHETIC-ALPHAGUARD-001"
+    ],
+    "ai_output": {
+      "ai_price": 100.96391008575037,
+      "ai_modified_duration": 0.9614291442951213,
+      "ai_dv01": 0.009706964567843254,
+      "trade_thesis": "RATES_UP_PRICE_DOWN",
+      "price_basis": "DIRTY",
+      "day_count_convention": "ACT/365F",
+      "coupon_frequency": 2
+    },
+    "ground_truth": {
+      "cash_flow_schedule": [
+        {
+          "payment_date": "2026-07-02",
+          "amount": 3.0
+        },
+        {
+          "payment_date": "2027-01-01",
+          "amount": 103.0
+        }
+      ],
+      "yield_to_maturity": 0.05,
+      "settlement_date": "2026-01-01",
+      "day_count_convention": "ACT/365F",
+      "coupon_frequency": 2,
+      "face_value": 100.0,
+      "currency": "USD",
+      "price_basis": "DIRTY",
+      "accrued_interest": 0.0,
+      "source_id": "DOC-SYNTHETIC-ALPHAGUARD-001"
+    }
+  }
+}

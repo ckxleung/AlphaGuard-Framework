@@ -225,7 +225,7 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_five_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_six_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
@@ -239,6 +239,13 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "reorder_point": 1000.0 + safety_stock,
                 "safety_stock": safety_stock,
                 "methodology": "Dual-variance stochastic equation.",
+                "ai_price": 100.96391008575037,
+                "ai_modified_duration": 0.9614291442951213,
+                "ai_dv01": 0.009706964567843254,
+                "trade_thesis": "RATES_UP_PRICE_DOWN",
+                "price_basis": "DIRTY",
+                "day_count_convention": "ACT/365F",
+                "coupon_frequency": 2,
             },
             {
                 "current_capacity": 100.0,
@@ -270,13 +277,24 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "demand_std": 20.0,
                 "lead_time_std": 2.0,
                 "service_level": 0.95,
+                "cash_flow_schedule": [
+                    {"payment_date": "2026-07-02", "amount": 3.0},
+                    {"payment_date": "2027-01-01", "amount": 103.0},
+                ],
+                "yield_to_maturity": 0.05,
+                "settlement_date": "2026-01-01",
+                "day_count_convention": "ACT/365F",
+                "coupon_frequency": 2,
+                "face_value": 100.0,
+                "price_basis": "DIRTY",
+                "accrued_interest": 0.0,
             },
         )
 
-        self.assertEqual(report["executed_modules"], 5)
+        self.assertEqual(report["executed_modules"], 6)
         self.assertEqual(
             set(report["results"]),
-            {"IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
+            {"FITV", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
         )
         self.assertTrue(
             all(

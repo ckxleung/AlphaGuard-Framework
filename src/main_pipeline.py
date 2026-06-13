@@ -8,7 +8,7 @@ import importlib.util
 import json
 import math
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -162,6 +162,33 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         + average_demand**2 * lead_time_std**2
     )
     reorder_point = average_demand * average_lead_time + safety_stock
+    settlement_date = date(2026, 1, 1)
+    fixed_income_cash_flows = (
+        (date(2026, 7, 2), 3.0),
+        (date(2027, 1, 1), 103.0),
+    )
+    yield_to_maturity = 0.05
+    coupon_frequency = 2
+    present_values = tuple(
+        (
+            (payment_date - settlement_date).days / 365.0,
+            amount
+            / math.pow(
+                1.0 + yield_to_maturity / coupon_frequency,
+                coupon_frequency
+                * ((payment_date - settlement_date).days / 365.0),
+            ),
+        )
+        for payment_date, amount in fixed_income_cash_flows
+    )
+    dirty_price = sum(value for _, value in present_values)
+    macaulay_duration = (
+        sum(years * value for years, value in present_values) / dirty_price
+    )
+    modified_duration = macaulay_duration / (
+        1.0 + yield_to_maturity / coupon_frequency
+    )
+    dv01 = modified_duration * dirty_price * 0.0001
     ai_output = {
         "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
         "investment_thesis": "NVDA demand remains supported by disclosed capacity expansion.",
@@ -172,6 +199,13 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "reorder_point": reorder_point,
         "safety_stock": safety_stock,
         "methodology": "Dual-variance stochastic safety-stock equation.",
+        "ai_price": dirty_price,
+        "ai_modified_duration": modified_duration,
+        "ai_dv01": dv01,
+        "trade_thesis": "RATES_UP_PRICE_DOWN",
+        "price_basis": "DIRTY",
+        "day_count_convention": "ACT/365F",
+        "coupon_frequency": coupon_frequency,
     }
     ground_truth = {
         "current_capacity": 100.0,
@@ -184,7 +218,7 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "increase_in_net_working_capital": 520_000_000,
         "reported_operating_cash_flow": 5_080_000_000,
         "currency": "USD",
-        "source_id": "SYNTHETIC-DAILY-SMOKE",
+        "source_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
         "fiscal_period_end": "2026-03-31",
         "equity_value": 150_000_000_000,
         "total_debt": 25_000_000_000,
@@ -203,6 +237,20 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "demand_std": demand_std,
         "lead_time_std": lead_time_std,
         "service_level": 0.95,
+        "cash_flow_schedule": [
+            {
+                "payment_date": payment_date.isoformat(),
+                "amount": amount,
+            }
+            for payment_date, amount in fixed_income_cash_flows
+        ],
+        "yield_to_maturity": yield_to_maturity,
+        "settlement_date": settlement_date.isoformat(),
+        "day_count_convention": "ACT/365F",
+        "coupon_frequency": coupon_frequency,
+        "face_value": 100.0,
+        "price_basis": "DIRTY",
+        "accrued_interest": 0.0,
     }
     return ai_output, ground_truth
 
@@ -247,7 +295,7 @@ def run_daily_smoke(
         "telemetry_timestamp_matrix": timestamp_matrix,
         "data_provenance": {
             "synthetic_data": True,
-            "source_id": "SYNTHETIC-DAILY-SMOKE",
+            "source_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
             "publication_eligible": False,
         },
         "routing_specs": route,

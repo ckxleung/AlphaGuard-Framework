@@ -29,7 +29,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(6, "TLAB", "Technical Latency and API Benchmark", "layer_1_telemetry", "ApiTelemetryAuditor", "SPECIFIED"),
     ModuleSpec(7, "BLSB", "Business-Language Strategy Benchmark", "layer_4_strategy", "BusinessLanguageAuditor", "SPECIFIED"),
     ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "SPECIFIED"),
-    ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "SPECIFIED"),
+    ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_09_FITV/fitv_auditor.py"),
     ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "SPECIFIED"),
     ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "SPECIFIED"),
     ModuleSpec(12, "IRTA", "Buy-Side Institutional Research Thesis Audit", "layer_4_strategy", "InstitutionalResearchThesisAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_12_IRTA/institutional_research_thesis_auditor.py"),

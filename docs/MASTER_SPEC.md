@@ -17,7 +17,7 @@ the previously missing unique ID.
 | 06 | TLAB | Layer 1 Telemetry | Specified |
 | 07 | BLSB | Layer 4 Strategy | Specified |
 | 08 | FOAS | Layer 3 Compliance | Specified |
-| 09 | FITV | Layer 2 Valuation | Specified |
+| 09 | FITV | Layer 2 Valuation | Implemented |
 | 10 | OAPE | Layer 1 Telemetry | Specified |
 | 11 | CVIB | Layer 2 Valuation | Specified |
 | 12 | IRTA | Layer 4 Strategy | Implemented |
@@ -173,13 +173,38 @@ or currencies, entities, or periods are mixed without normalization.
 **Purpose:** Validate bond price, modified duration, DV01, and the written
 rate-risk conclusion under one declared market convention.
 
-**Contract:** Discount contractual cash flows using the supplied settlement,
-day-count, coupon-frequency, yield, and clean-or-dirty price basis. Calculate
-Macaulay duration, modified duration, and DV01 from the same basis. Metric-level
-tolerances must be explicit and may default to 0.5% relative error.
+**Contract:** FITV v1 accepts ordered contractual cash flows with ISO-8601
+payment dates, an ISO-8601 settlement date, `ACT/365F`, coupon frequency of 1,
+2, 4, or 12, yield to maturity, face value, currency, clean-or-dirty price
+basis, accrued interest, and a registered source ID.
 
-**Reject when:** a metric exceeds tolerance, conventions are mixed, or the
-narrative shock direction contradicts the calculated exposure.
+For each cash flow:
+
+```text
+t_i = (payment_date_i - settlement_date) / 365
+PV_i = cash_flow_i / (1 + y / m) ^ (m * t_i)
+```
+
+The deterministic metrics are:
+
+```text
+dirty_price = sum(PV_i)
+clean_price = dirty_price - accrued_interest
+Macaulay duration = sum(t_i * PV_i) / dirty_price
+Modified duration = Macaulay duration / (1 + y / m)
+DV01 = Modified duration * dirty_price * 0.0001
+```
+
+AI output must provide price, modified duration, DV01, price basis, day-count
+convention, coupon frequency, and a controlled rate-risk conclusion:
+`RATES_UP_PRICE_DOWN` or `RATES_DOWN_PRICE_UP`.
+
+**Tolerance:** Price, duration, and DV01 each default to 0.5% relative error and
+may be overridden independently with non-negative fixture values.
+
+**Reject when:** a metric exceeds its tolerance, a declared convention differs,
+the discount base is non-positive, the schedule is invalid, or the rate-risk
+conclusion has the wrong sign.
 
 ## Module 10 OAPE
 

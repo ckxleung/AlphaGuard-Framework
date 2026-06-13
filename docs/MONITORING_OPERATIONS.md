@@ -102,6 +102,14 @@ python3 src/monitoring_control_plane.py \
   --module-payloads examples/module_payloads.financing.synthetic.json
 ```
 
+Run the synthetic fixed-income rate-shock demonstration:
+
+```bash
+python3 src/monitoring_control_plane.py \
+  --event examples/monitoring_event.rate_shock.synthetic.json \
+  --module-payloads examples/module_payloads.rate_shock.synthetic.json
+```
+
 Generate the daily 56-enterprise routing plan:
 
 ```bash

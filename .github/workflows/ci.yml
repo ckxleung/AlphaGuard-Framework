@@ -37,6 +37,9 @@ jobs:
           python src/monitoring_control_plane.py \
             --event examples/monitoring_event.example.json \
             --module-payloads examples/module_payloads.financing.synthetic.json
+          python src/monitoring_control_plane.py \
+            --event examples/monitoring_event.rate_shock.synthetic.json \
+            --module-payloads examples/module_payloads.rate_shock.synthetic.json
       - name: Validate institutional publication contract
         run: |
           python src/source_registry.py config/source_registry.json
