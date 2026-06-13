@@ -1,0 +1,5 @@
+AlphaGuard synthetic publication fixture
+
+Section: Synthetic audit result
+The Module_15_SCGV synthetic fixture produced a rigor score of 2.1 out of 5.0.
+The result is test data and is not live market research.

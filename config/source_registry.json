@@ -1,0 +1,34 @@
+{
+  "registry_version": "1.0",
+  "generated_at": "2026-06-13T10:00:00+08:00",
+  "documents": [
+    {
+      "document_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
+      "publisher": "China Alpha Dispatch",
+      "title": "Synthetic AlphaGuard Publication Fixture",
+      "document_type": "INTERNAL_FIXTURE",
+      "jurisdiction": "GLOBAL",
+      "publication_date": "2026-06-12",
+      "canonical_url": "https://github.com/ckxleung/AlphaGuard-Framework/blob/main/examples/source_documents/synthetic_publication_fixture.txt",
+      "retrieved_at": "2026-06-12T15:55:00+08:00",
+      "content_hash": "sha256:ef7d4b727929c6555bd6f77036fb1817df5e35bf5cfb3958aa5c2463b9071199",
+      "language": "en",
+      "primary_source": true,
+      "local_path": "examples/source_documents/synthetic_publication_fixture.txt"
+    },
+    {
+      "document_id": "DOC-ALPHAGUARD-RESEARCH-20260613-001",
+      "publisher": "China Alpha Dispatch",
+      "title": "AlphaGuard Public-Source Control-Plane Fixture",
+      "document_type": "RESEARCH",
+      "jurisdiction": "GLOBAL",
+      "publication_date": "2026-06-13",
+      "canonical_url": "https://github.com/ckxleung/AlphaGuard-Framework/blob/main/examples/source_documents/public_research_fixture.txt",
+      "retrieved_at": "2026-06-13T10:00:00+08:00",
+      "content_hash": "sha256:b8e089fc21370830a1d253f8c71c807a6da36a9e29735686e3466b51652e794d",
+      "language": "en",
+      "primary_source": true,
+      "local_path": "examples/source_documents/public_research_fixture.txt"
+    }
+  ]
+}

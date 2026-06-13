@@ -39,6 +39,7 @@ jobs:
             --module-payloads examples/module_payloads.financing.synthetic.json
       - name: Validate institutional publication contract
         run: |
+          python src/source_registry.py config/source_registry.json
           python src/output_standard.py examples/publication_artifact.example.json
       - name: Validate cross-market temporal engine
         run: python src/market_clock.py

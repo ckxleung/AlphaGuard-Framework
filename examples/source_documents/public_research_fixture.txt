@@ -1,0 +1,5 @@
+AlphaGuard public-source control-plane fixture
+
+Section: Supply-chain monitoring input
+This public repository fixture exists only to test registered evidence routing.
+It contains no live market data and supports no investment conclusion.

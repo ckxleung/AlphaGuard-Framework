@@ -22,7 +22,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "1.0"
+      "const": "1.1"
     },
     "artifact_id": {
       "type": "string",
@@ -137,12 +137,19 @@
         "additionalProperties": true,
         "required": [
           "source_id",
+          "registry_document_id",
           "title",
           "url",
-          "accessed_at"
+          "accessed_at",
+          "content_hash",
+          "locator"
         ],
         "properties": {
           "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "registry_document_id": {
             "type": "string",
             "minLength": 1
           },
@@ -157,6 +164,37 @@
           "accessed_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "content_hash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "locator": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "value"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "PAGE",
+                  "SECTION",
+                  "TABLE",
+                  "EXHIBIT",
+                  "PARAGRAPH",
+                  "CELL_RANGE",
+                  "TIMESTAMP",
+                  "LINE_RANGE",
+                  "JSON_POINTER"
+                ]
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }

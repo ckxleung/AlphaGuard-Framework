@@ -91,9 +91,15 @@ two claims: one `FACT` and one `INFERENCE`.
 Each source requires:
 
 - a stable `source_id`;
-- title;
-- HTTP(S) URL;
-- `accessed_at` timestamp with timezone.
+- a `registry_document_id` present in `config/source_registry.json`;
+- the exact registered title and HTTP(S) URL;
+- `accessed_at` matching the registered snapshot timestamp;
+- the registered SHA-256 `content_hash`;
+- a precise page, section, table, exhibit, paragraph, cell-range, timestamp,
+  line-range, or JSON-pointer locator.
+
+The complete registration and locator contract is documented in
+[`docs/SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md).
 
 Preferred evidence order:
 
@@ -128,6 +134,10 @@ Raw scorecards must not be rewritten to make a narrative more persuasive.
 The canonical schema is
 `schemas/publication_artifact.schema.json`. Runtime validation is implemented
 in `src/output_standard.py`.
+
+Schema version `1.1` requires registered document snapshots, SHA-256 hashes,
+and exact citation locators. Version `1.0` artifacts must be migrated before
+they can pass the current publication gate.
 
 Validate an artifact before publication:
 
@@ -166,6 +176,7 @@ An artifact is publishable only when all gates pass:
 8. no placeholder values remain in the final report;
 9. Markdown and JSON use the same artifact ID and as-of time;
 10. a human reviewer confirms that the prose does not overstate the evidence.
+11. every cited document resolves to the source registry and an exact locator.
 
 The timestamp matrix must satisfy
 [`docs/TEMPORAL_STANDARD.md`](TEMPORAL_STANDARD.md). All three local market

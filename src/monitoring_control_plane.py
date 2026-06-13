@@ -17,6 +17,11 @@ if str(ROOT) not in sys.path:
 
 from src.main_pipeline import run_module_payloads
 from src.module_manifest import MODULE_SPECS
+from src.source_registry import (
+    build_document_index,
+    load_source_registry,
+    validate_source_registry,
+)
 
 
 PROFILE_CONFIG = ROOT / "config" / "enterprise_monitoring_profiles.json"
@@ -183,7 +188,10 @@ def load_routing_policy(path: Path = POLICY_CONFIG) -> dict[str, tuple[str, ...]
     return routes
 
 
-def _validate_event(event: Mapping[str, Any]) -> dict[str, Any]:
+def _validate_event(
+    event: Mapping[str, Any],
+    source_registry: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     if not isinstance(event, Mapping):
         raise TypeError("event must be an object.")
     event_id = _require_text(event, "event_id")
@@ -205,6 +213,29 @@ def _validate_event(event: Mapping[str, Any]) -> dict[str, Any]:
         normalized_refs.append(reference.strip())
     if len(normalized_refs) != len(set(normalized_refs)):
         raise ValueError("evidence_refs cannot contain duplicates.")
+    if data_classification == "PLANNING_ONLY" and normalized_refs:
+        raise ValueError("PLANNING_ONLY events cannot contain evidence_refs.")
+    if normalized_refs:
+        registry = (
+            load_source_registry()
+            if source_registry is None
+            else validate_source_registry(source_registry)
+        )
+        document_index = build_document_index(registry)
+        for reference in normalized_refs:
+            try:
+                document = document_index.require(reference)
+            except KeyError as error:
+                raise ValueError(
+                    f"evidence_ref is not registered: {reference}"
+                ) from error
+            if (
+                data_classification == "PUBLIC_SOURCE"
+                and document["document_type"] == "INTERNAL_FIXTURE"
+            ):
+                raise ValueError(
+                    "PUBLIC_SOURCE events cannot cite INTERNAL_FIXTURE documents."
+                )
     return {
         "event_id": event_id,
         "ticker": ticker,
@@ -215,9 +246,12 @@ def _validate_event(event: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
-def plan_monitoring_event(event: Mapping[str, Any]) -> dict[str, Any]:
+def plan_monitoring_event(
+    event: Mapping[str, Any],
+    source_registry: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Build a transparent module plan without claiming that an audit ran."""
-    validated = _validate_event(event)
+    validated = _validate_event(event, source_registry)
     profiles = load_enterprise_profiles()
     profile = profiles.get(validated["ticker"])
     if profile is None:
@@ -272,11 +306,12 @@ def plan_monitoring_event(event: Mapping[str, Any]) -> dict[str, Any]:
 def execute_monitoring_event(
     event: Mapping[str, Any],
     module_payloads: dict[str, Any],
+    source_registry: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Execute available selected kernels with per-module evidence payloads."""
     if not isinstance(module_payloads, dict):
         raise TypeError("module_payloads must be an object keyed by module code.")
-    plan = plan_monitoring_event(event)
+    plan = plan_monitoring_event(event, source_registry)
     for code in plan["executable_modules"]:
         payload = module_payloads.get(code)
         if payload is None:

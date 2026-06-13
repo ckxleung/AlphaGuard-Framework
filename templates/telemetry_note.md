@@ -76,7 +76,7 @@ risk. Do not imply guaranteed performance.
 
 ### METHODOLOGY AND AUDIT TRAIL
 
-- **Sources:** {{SOURCE_IDS_AND_LINKS}}
+- **Sources:** {{REGISTERED_DOCUMENT_IDS_HASHES_LOCATORS_AND_LINKS}}
 - **Methodology:** {{KERNEL_AND_MASTER_SPEC_REFERENCES}}
 - **Repository:** https://github.com/ckxleung/AlphaGuard-Framework
 - **JSON sidecar:** {{ARTIFACT_JSON_PATH_OR_URL}}

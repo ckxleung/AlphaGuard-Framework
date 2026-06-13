@@ -33,6 +33,7 @@ class RepositoryStructureTests(unittest.TestCase):
             "market_clock.py",
             "monitoring_control_plane.py",
             "output_standard.py",
+            "source_registry.py",
             "telemetry_router.py",
         ):
             self.assertTrue((SRC / filename).is_file(), filename)
@@ -55,22 +56,33 @@ class RepositoryStructureTests(unittest.TestCase):
 
         required_paths = (
             ROOT / "docs" / "OUTPUT_STANDARD.md",
+            ROOT / "docs" / "SOURCE_REGISTRY.md",
             ROOT / "docs" / "TEMPORAL_STANDARD.md",
             ROOT / "schemas" / "publication_artifact.schema.json",
+            ROOT / "schemas" / "source_registry.schema.json",
             ROOT / "templates" / "telemetry_note.md",
             ROOT / "templates" / "deep_dive_whitepaper.md",
             ROOT / "examples" / "publication_artifact.example.json",
+            ROOT / "config" / "source_registry.json",
         )
         for path in required_paths:
             self.assertTrue(path.is_file(), path)
 
-        schema = json.loads(required_paths[2].read_text(encoding="utf-8"))
+        schema = json.loads(required_paths[3].read_text(encoding="utf-8"))
         self.assertEqual(
             schema["$id"],
             "https://github.com/ckxleung/AlphaGuard-Framework/"
             "schemas/publication_artifact.schema.json",
         )
-        example = json.loads(required_paths[5].read_text(encoding="utf-8"))
+        source_schema = json.loads(
+            required_paths[4].read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            source_schema["$id"],
+            "https://github.com/ckxleung/AlphaGuard-Framework/"
+            "schemas/source_registry.schema.json",
+        )
+        example = json.loads(required_paths[7].read_text(encoding="utf-8"))
         self.assertTrue(validate_publication_artifact(example))
 
     def test_target_enterprise_config_lists_current_unique_tickers(self) -> None:

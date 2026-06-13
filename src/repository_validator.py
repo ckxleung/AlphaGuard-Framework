@@ -16,6 +16,7 @@ if str(ROOT) not in sys.path:
 from src.module_manifest import MODULE_SPECS, validate_manifest
 from src.kernel_spec_catalog import validate_kernel_spec_catalog
 from src.output_standard import validate_publication_artifact
+from src.source_registry import load_source_registry
 
 
 REQUIRED_LAYERS = (
@@ -32,12 +33,17 @@ MONITORING_CONFIGS = (
 )
 PUBLICATION_ASSETS = (
     "docs/OUTPUT_STANDARD.md",
+    "docs/SOURCE_REGISTRY.md",
     "docs/TEMPORAL_STANDARD.md",
     "schemas/publication_artifact.schema.json",
+    "schemas/source_registry.schema.json",
     "templates/telemetry_note.md",
     "templates/deep_dive_whitepaper.md",
     "examples/publication_artifact.example.json",
+    "examples/source_documents/public_research_fixture.txt",
+    "examples/source_documents/synthetic_publication_fixture.txt",
 )
+SOURCE_REGISTRY_CONFIG = "config/source_registry.json"
 
 
 def _validate_kernel_file(path: Path) -> tuple[str, ...]:
@@ -118,6 +124,16 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
         if not (root / relative_path).is_file():
             errors.append(f"Missing publication standard asset: {relative_path}")
 
+    registry_path = root / SOURCE_REGISTRY_CONFIG
+    source_registry: dict[str, Any] | None = None
+    if not registry_path.is_file():
+        errors.append(f"Missing source registry: {SOURCE_REGISTRY_CONFIG}")
+    else:
+        try:
+            source_registry = load_source_registry(registry_path, root=root)
+        except (OSError, TypeError, ValueError, json.JSONDecodeError) as error:
+            errors.append(f"Invalid source registry: {error}")
+
     for relative_path in MONITORING_CONFIGS:
         if not (root / relative_path).is_file():
             errors.append(f"Missing monitoring configuration: {relative_path}")
@@ -138,12 +154,12 @@ def validate_repository(root: Path = ROOT) -> dict[str, Any]:
             errors.append(f"Invalid monitoring configuration: {error}")
 
     publication_example = root / "examples" / "publication_artifact.example.json"
-    if publication_example.is_file():
+    if publication_example.is_file() and source_registry is not None:
         try:
             example_payload = json.loads(
                 publication_example.read_text(encoding="utf-8")
             )
-            validate_publication_artifact(example_payload)
+            validate_publication_artifact(example_payload, source_registry)
         except (TypeError, ValueError, json.JSONDecodeError) as error:
             errors.append(f"Invalid publication artifact example: {error}")
 

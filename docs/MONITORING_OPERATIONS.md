@@ -65,7 +65,7 @@ an event appear fully covered.
   "ticker": "NVDA",
   "event_type": "FINANCING_MA",
   "observed_at": "2026-06-13T00:00:00Z",
-  "evidence_refs": ["SOURCE-ID-001"],
+  "evidence_refs": ["DOC-SEC-10Q-20260613-EXAMPLE"],
   "data_classification": "PUBLIC_SOURCE"
 }
 ```
@@ -75,6 +75,11 @@ Supported classifications:
 - `PLANNING_ONLY`: routing exercise without audit evidence;
 - `SYNTHETIC`: deterministic development fixture;
 - `PUBLIC_SOURCE`: candidate production evidence.
+
+Every non-empty `evidence_refs` value must resolve to
+`config/source_registry.json`. `PUBLIC_SOURCE` events cannot cite a document
+registered as `INTERNAL_FIXTURE`. See
+[`SOURCE_REGISTRY.md`](SOURCE_REGISTRY.md).
 
 `PUBLIC_SOURCE` alone does not make a report publishable. All selected modules
 must be implemented, supplied with validated payloads, and successfully

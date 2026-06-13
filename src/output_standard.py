@@ -17,11 +17,30 @@ if str(ROOT) not in sys.path:
 
 from src.base_auditor import BaseAuditor
 from src.market_clock import validate_timestamp_matrix
+from src.source_registry import (
+    DocumentIndex,
+    build_document_index,
+    load_source_registry,
+    validate_source_registry,
+)
 
 
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
 DOCUMENT_TYPES = frozenset({"TELEMETRY_NOTE", "DEEP_DIVE_WHITEPAPER"})
 CLAIM_TYPES = frozenset({"FACT", "INFERENCE", "SCENARIO"})
+LOCATOR_TYPES = frozenset(
+    {
+        "PAGE",
+        "SECTION",
+        "TABLE",
+        "EXHIBIT",
+        "PARAGRAPH",
+        "CELL_RANGE",
+        "TIMESTAMP",
+        "LINE_RANGE",
+        "JSON_POINTER",
+    }
+)
 REQUIRED_ARTIFACT_KEYS = frozenset(
     {
         "schema_version",
@@ -67,7 +86,30 @@ def _parse_timestamp(value: Any, field_name: str) -> datetime:
     return parsed
 
 
-def _validate_sources(sources: Any) -> tuple[list[dict[str, Any]], frozenset[str]]:
+def _validate_locator(locator: Any, source_id: str) -> dict[str, str]:
+    if not isinstance(locator, Mapping):
+        raise ValueError(f"Source {source_id} locator must be an object.")
+    locator_type = _require_text(
+        locator.get("type"),
+        f"source {source_id} locator type",
+    )
+    if locator_type not in LOCATOR_TYPES:
+        raise ValueError(
+            f"Source {source_id} locator type is not supported."
+        )
+    return {
+        "type": locator_type,
+        "value": _require_text(
+            locator.get("value"),
+            f"source {source_id} locator value",
+        ),
+    }
+
+
+def _validate_sources(
+    sources: Any,
+    document_index: DocumentIndex,
+) -> tuple[list[dict[str, Any]], frozenset[str]]:
     if not isinstance(sources, list) or not sources:
         raise ValueError("sources must be a non-empty list.")
 
@@ -82,12 +124,57 @@ def _validate_sources(sources: Any) -> tuple[list[dict[str, Any]], frozenset[str
             raise ValueError(f"Duplicate source_id: {source_id}")
         source_ids.add(source_id)
         validated["source_id"] = source_id
-        validated["title"] = _require_text(validated.get("title"), "source title")
+        registry_document_id = _require_text(
+            validated.get("registry_document_id"),
+            f"source {source_id} registry_document_id",
+        )
+        try:
+            registered = document_index.require(registry_document_id)
+        except KeyError as error:
+            raise ValueError(
+                f"Source document is not registered: {registry_document_id}"
+            ) from error
+        validated["registry_document_id"] = registry_document_id
+
+        title = _require_text(validated.get("title"), "source title")
+        if title != registered["title"]:
+            raise ValueError(
+                f"Source {source_id} title does not match the registered title."
+            )
+        validated["title"] = title
         url = _require_text(validated.get("url"), "source url")
         if not url.startswith(("https://", "http://")):
             raise ValueError(f"Source {source_id} must use an HTTP(S) URL.")
+        if url != registered["canonical_url"]:
+            raise ValueError(
+                f"Source {source_id} URL does not match the registered URL."
+            )
         validated["url"] = url
-        _parse_timestamp(validated.get("accessed_at"), "source accessed_at")
+        accessed_at = _parse_timestamp(
+            validated.get("accessed_at"),
+            "source accessed_at",
+        )
+        registered_at = _parse_timestamp(
+            registered["retrieved_at"],
+            "registered source retrieved_at",
+        )
+        if accessed_at != registered_at:
+            raise ValueError(
+                f"Source {source_id} accessed_at does not match the registered snapshot."
+            )
+        content_hash = _require_text(
+            validated.get("content_hash"),
+            f"source {source_id} content_hash",
+        ).lower()
+        if content_hash != registered["content_hash"]:
+            raise ValueError(
+                f"Source {source_id} content_hash does not match the registered snapshot."
+            )
+        validated["content_hash"] = content_hash
+        validated["locator"] = _validate_locator(
+            validated.get("locator"),
+            source_id,
+        )
         validated_sources.append(validated)
     return validated_sources, frozenset(source_ids)
 
@@ -206,6 +293,7 @@ def _validate_disclosures(disclosures: Any) -> dict[str, bool]:
 
 def validate_publication_artifact(
     artifact: Mapping[str, Any],
+    source_registry: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate and copy a publication artifact without mutating the caller."""
     if not isinstance(artifact, Mapping):
@@ -256,7 +344,15 @@ def validate_publication_artifact(
     if as_of != matrix_utc:
         raise ValueError("as_of must match the telemetry timestamp matrix instant.")
 
-    validated["sources"], source_ids = _validate_sources(validated["sources"])
+    registry = (
+        load_source_registry()
+        if source_registry is None
+        else validate_source_registry(source_registry)
+    )
+    validated["sources"], source_ids = _validate_sources(
+        validated["sources"],
+        build_document_index(registry),
+    )
     validated["claims"] = _validate_claims(validated["claims"], source_ids)
     validated["scorecards"] = _validate_scorecards(validated["scorecards"])
     validated["disclosures"] = _validate_disclosures(validated["disclosures"])

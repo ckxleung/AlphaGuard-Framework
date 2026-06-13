@@ -10,6 +10,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+PUBLIC_DOCUMENT_ID = "DOC-ALPHAGUARD-RESEARCH-20260613-001"
+SYNTHETIC_DOCUMENT_ID = "DOC-SYNTHETIC-ALPHAGUARD-001"
 
 
 class MonitoringPolicyTests(unittest.TestCase):
@@ -76,7 +78,7 @@ class MonitoringPolicyTests(unittest.TestCase):
                 "ticker": "AAPL",
                 "event_type": "EARNINGS_RELEASE",
                 "observed_at": "2026-06-13T01:00:00Z",
-                "evidence_refs": ["SEC-10Q-AAPL-2026Q2"],
+                "evidence_refs": [PUBLIC_DOCUMENT_ID],
                 "data_classification": "PUBLIC_SOURCE",
             }
         )
@@ -134,7 +136,7 @@ class SelectiveExecutionTests(unittest.TestCase):
     @staticmethod
     def _module_payloads(
         classification: str = "PUBLIC_SOURCE",
-        evidence_ref: str = "PUBLIC-SUPPLY-SOURCE-001",
+        evidence_ref: str = PUBLIC_DOCUMENT_ID,
     ) -> dict:
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
         return {
@@ -191,7 +193,7 @@ class SelectiveExecutionTests(unittest.TestCase):
                 "ticker": "NVDA",
                 "event_type": "SUPPLY_CHAIN_DISRUPTION",
                 "observed_at": "2026-06-13T02:00:00Z",
-                "evidence_refs": ["PUBLIC-SUPPLY-SOURCE-001"],
+                "evidence_refs": [PUBLIC_DOCUMENT_ID],
                 "data_classification": "PUBLIC_SOURCE",
             },
             self._module_payloads(),
@@ -211,12 +213,12 @@ class SelectiveExecutionTests(unittest.TestCase):
                 "ticker": "NVDA",
                 "event_type": "SUPPLY_CHAIN_DISRUPTION",
                 "observed_at": "2026-06-13T02:00:00Z",
-                "evidence_refs": ["SYNTHETIC-FIXTURE-001"],
+                "evidence_refs": [SYNTHETIC_DOCUMENT_ID],
                 "data_classification": "SYNTHETIC",
             },
             self._module_payloads(
                 classification="SYNTHETIC",
-                evidence_ref="SYNTHETIC-FIXTURE-001",
+                evidence_ref=SYNTHETIC_DOCUMENT_ID,
             ),
         )
         self.assertFalse(report["publication_eligible"])
@@ -231,13 +233,28 @@ class SelectiveExecutionTests(unittest.TestCase):
                     "ticker": "NVDA",
                     "event_type": "SUPPLY_CHAIN_DISRUPTION",
                     "observed_at": "2026-06-13T02:00:00Z",
-                    "evidence_refs": ["PUBLIC-SUPPLY-SOURCE-001"],
+                    "evidence_refs": [PUBLIC_DOCUMENT_ID],
                     "data_classification": "PUBLIC_SOURCE",
                 },
                 self._module_payloads(
                     classification="SYNTHETIC",
-                    evidence_ref="SYNTHETIC-FIXTURE-001",
+                    evidence_ref=SYNTHETIC_DOCUMENT_ID,
                 ),
+            )
+
+    def test_unregistered_event_evidence_fails_closed(self) -> None:
+        from src.monitoring_control_plane import plan_monitoring_event
+
+        with self.assertRaisesRegex(ValueError, "not registered"):
+            plan_monitoring_event(
+                {
+                    "event_id": "evt-unregistered-source",
+                    "ticker": "NVDA",
+                    "event_type": "SUPPLY_CHAIN_DISRUPTION",
+                    "observed_at": "2026-06-13T02:00:00Z",
+                    "evidence_refs": ["DOC-UNKNOWN"],
+                    "data_classification": "PUBLIC_SOURCE",
+                }
             )
 
     def test_control_plane_cli_runs_sample_event(self) -> None:

@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "artifact_id": "CAD-TN-20260612-SYNTHETIC-001",
   "document_type": "TELEMETRY_NOTE",
   "title": "Synthetic Supply-Chain Telemetry Note",
@@ -71,9 +71,15 @@
   "sources": [
     {
       "source_id": "SRC-001",
+      "registry_document_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
       "title": "Synthetic AlphaGuard Publication Fixture",
-      "url": "https://github.com/ckxleung/AlphaGuard-Framework",
-      "accessed_at": "2026-06-12T15:55:00+08:00"
+      "url": "https://github.com/ckxleung/AlphaGuard-Framework/blob/main/examples/source_documents/synthetic_publication_fixture.txt",
+      "accessed_at": "2026-06-12T15:55:00+08:00",
+      "content_hash": "sha256:ef7d4b727929c6555bd6f77036fb1817df5e35bf5cfb3958aa5c2463b9071199",
+      "locator": {
+        "type": "SECTION",
+        "value": "Synthetic audit result"
+      }
     }
   ],
   "scorecards": [

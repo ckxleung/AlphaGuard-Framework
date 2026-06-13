@@ -4,7 +4,7 @@
   "event_type": "FINANCING_MA",
   "observed_at": "2026-06-13T00:00:00Z",
   "evidence_refs": [
-    "SYNTHETIC-FINANCING-DEMO"
+    "DOC-SYNTHETIC-ALPHAGUARD-001"
   ],
   "data_classification": "SYNTHETIC"
 }

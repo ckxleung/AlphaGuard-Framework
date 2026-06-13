@@ -2,7 +2,7 @@
   "IRTA": {
     "data_classification": "SYNTHETIC",
     "evidence_refs": [
-      "SYNTHETIC-FINANCING-DEMO"
+      "DOC-SYNTHETIC-ALPHAGUARD-001"
     ],
     "ai_output": {
       "revenue_forecast": [
@@ -31,7 +31,7 @@
   "IBDV": {
     "data_classification": "SYNTHETIC",
     "evidence_refs": [
-      "SYNTHETIC-FINANCING-DEMO"
+      "DOC-SYNTHETIC-ALPHAGUARD-001"
     ],
     "ai_output": {
       "calculated_enterprise_value": 168000000000
@@ -45,7 +45,7 @@
       "reported_enterprise_value": 168000000000,
       "currency": "USD",
       "equity_value_basis": "SYNTHETIC_MARKET_CAPITALIZATION",
-      "source_id": "SYNTHETIC-FINANCING-DEMO",
+      "source_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
       "valuation_date": "2026-06-13"
     }
   }

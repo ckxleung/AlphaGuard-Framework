@@ -18,7 +18,7 @@ def valid_artifact() -> dict:
     from src.market_clock import generate_institutional_timestamp_matrix
 
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "artifact_id": "CAD-TN-20260612-001",
         "document_type": "TELEMETRY_NOTE",
         "title": "Synthetic Enterprise AI Telemetry Note",
@@ -51,9 +51,23 @@ def valid_artifact() -> dict:
         "sources": [
             {
                 "source_id": "SRC-001",
-                "title": "Synthetic AlphaGuard Fixture",
-                "url": "https://example.com/alphaguard-fixture",
+                "registry_document_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
+                "title": "Synthetic AlphaGuard Publication Fixture",
+                "url": (
+                    "https://github.com/ckxleung/AlphaGuard-Framework/"
+                    "blob/main/examples/source_documents/"
+                    "synthetic_publication_fixture.txt"
+                ),
                 "accessed_at": "2026-06-12T15:55:00+08:00",
+                "content_hash": (
+                    "sha256:"
+                    "ef7d4b727929c6555bd6f77036fb1817df5e35bf5cfb39"
+                    "58aa5c2463b9071199"
+                ),
+                "locator": {
+                    "type": "SECTION",
+                    "value": "Synthetic audit result",
+                },
             }
         ],
         "scorecards": [
@@ -114,6 +128,33 @@ class PublicationOutputContractTests(unittest.TestCase):
         artifact["claims"][0]["source_refs"] = ["SRC-404"]
 
         with self.assertRaisesRegex(ValueError, "unknown source"):
+            validate_publication_artifact(artifact)
+
+    def test_unregistered_source_document_is_rejected(self) -> None:
+        from src.output_standard import validate_publication_artifact
+
+        artifact = valid_artifact()
+        artifact["sources"][0]["registry_document_id"] = "DOC-UNKNOWN"
+
+        with self.assertRaisesRegex(ValueError, "not registered"):
+            validate_publication_artifact(artifact)
+
+    def test_source_requires_exact_document_locator(self) -> None:
+        from src.output_standard import validate_publication_artifact
+
+        artifact = valid_artifact()
+        artifact["sources"][0].pop("locator")
+
+        with self.assertRaisesRegex(ValueError, "locator"):
+            validate_publication_artifact(artifact)
+
+    def test_source_metadata_must_match_registry_snapshot(self) -> None:
+        from src.output_standard import validate_publication_artifact
+
+        artifact = valid_artifact()
+        artifact["sources"][0]["title"] = "Ambiguous source title"
+
+        with self.assertRaisesRegex(ValueError, "registered title"):
             validate_publication_artifact(artifact)
 
     def test_timestamp_without_timezone_is_rejected(self) -> None:

@@ -39,7 +39,7 @@
 
 | Evidence Class | Coverage | As-of | Source IDs | Limitations |
 |---|---|---|---|---|
-| {{FILING_MARKET_DATA_OR_TELEMETRY}} | {{SCOPE}} | {{TIMESTAMP}} | {{SOURCE_IDS}} | {{LIMITATIONS}} |
+| {{FILING_MARKET_DATA_OR_TELEMETRY}} | {{SCOPE}} | {{TIMESTAMP}} | {{REGISTERED_DOCUMENT_IDS}} | {{LIMITATIONS}} |
 
 List the AlphaGuard kernels, deterministic equations, tolerances, and rejection
 rules used in the analysis.
@@ -84,7 +84,7 @@ Do not present scenario outputs as observed facts or guaranteed returns.
 
 ### AUDIT TRAIL
 
-- **Sources:** {{SOURCE_IDS_AND_LINKS}}
+- **Sources:** {{REGISTERED_DOCUMENT_IDS_HASHES_LOCATORS_AND_LINKS}}
 - **Methodology:** {{KERNEL_AND_MASTER_SPEC_REFERENCES}}
 - **Repository:** https://github.com/ckxleung/AlphaGuard-Framework
 - **JSON sidecar:** {{ARTIFACT_JSON_PATH_OR_URL}}

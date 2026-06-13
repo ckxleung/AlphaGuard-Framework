@@ -24,6 +24,7 @@ evaluation kernels are implemented:
 - a daily GitHub Actions telemetry workflow at 04:00 HKT;
 - a DST-aware three-market timestamp matrix;
 - a machine-verifiable institutional publication contract;
+- a SHA-256-backed source-document registry with exact citation locators;
 - placeholder and structure validation;
 - a one-command pipeline entry point.
 
@@ -62,9 +63,11 @@ evaluation_kernels/
 config/
   enterprise_monitoring_profiles.json
   event_routing_policy.json
+  source_registry.json
   target_enterprises.json
 schemas/
   publication_artifact.schema.json
+  source_registry.schema.json
 templates/
   telemetry_note.md
   deep_dive_whitepaper.md
@@ -77,6 +80,7 @@ src/
   module_manifest.py
   output_standard.py
   repository_validator.py
+  source_registry.py
   telemetry_router.py
 tests/
 docs/
@@ -95,6 +99,7 @@ python3 src/main_pipeline.py
 python3 src/monitoring_control_plane.py --event examples/monitoring_event.example.json
 python3 src/monitoring_control_plane.py --portfolio-baseline
 python3 src/output_standard.py examples/publication_artifact.example.json
+python3 src/source_registry.py config/source_registry.json
 ```
 
 Coverage verification:
@@ -147,6 +152,13 @@ in
 [`schemas/publication_artifact.schema.json`](schemas/publication_artifact.schema.json).
 Examples containing synthetic data are explicitly labeled and must pass
 `src/output_standard.py` before publication.
+
+Source documents are registered separately from report citations. The registry
+stores stable document IDs, issuer metadata, retrieval timestamps, SHA-256
+snapshot hashes, and primary-source classification. Each report citation adds
+an exact page, section, table, exhibit, paragraph, cell, timestamp, line, or
+JSON-pointer locator. See
+[`docs/SOURCE_REGISTRY.md`](docs/SOURCE_REGISTRY.md).
 
 ## Cross-Market Time Integrity
 
