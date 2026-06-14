@@ -185,8 +185,8 @@ class RepositoryStructureTests(unittest.TestCase):
         self.assertIn("## Implementation Matrix", roadmap)
         self.assertIn("## Recommended Build Sequence", roadmap)
         self.assertIn("## Promotion Checklist", roadmap)
-        self.assertIn("Production auditors live: 10.", roadmap)
-        self.assertIn("Specified auditors awaiting implementation: 8.", roadmap)
+        self.assertIn("Production auditors live: 18.", roadmap)
+        self.assertIn("Specified auditors awaiting implementation: 0.", roadmap)
 
         for specification in MODULE_SPECS:
             expected_row = (

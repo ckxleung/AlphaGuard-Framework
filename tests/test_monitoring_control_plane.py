@@ -91,7 +91,6 @@ class MonitoringPolicyTests(unittest.TestCase):
         )
         self.assertEqual(plan["cohort"], "ENTERPRISE_FINTECH_AGENT")
         self.assertEqual(plan["cohort_event_priority"], "PREFERRED")
-        self.assertIn("FRTE", plan["unavailable_modules"])
         self.assertFalse(plan["publication_eligible"])
 
     def test_unknown_event_type_and_ticker_fail_closed(self) -> None:
@@ -218,7 +217,6 @@ class SelectiveExecutionTests(unittest.TestCase):
         )
 
         self.assertEqual(set(report["results"]), {"BMAE", "SCGV"})
-        self.assertIn("APAC", report["unavailable_modules"])
         self.assertIn("IRTA", report["skipped_executable_modules"])
         self.assertFalse(report["publication_eligible"])
 

@@ -18,7 +18,7 @@ the previously missing unique ID.
 | 07 | BLSB | Layer 4 Strategy | Specified |
 | 08 | FOAS | Layer 3 Compliance | Implemented |
 | 09 | FITV | Layer 2 Valuation | Implemented |
-| 10 | OAPE | Layer 1 Telemetry | Specified |
+| 10 | OAPE | Layer 1 Telemetry | Implemented |
 | 11 | CVIB | Layer 2 Valuation | Implemented |
 | 12 | IRTA | Layer 4 Strategy | Implemented |
 | 13 | BMAE | Layer 4 Strategy | Implemented |

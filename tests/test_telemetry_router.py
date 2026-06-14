@@ -155,6 +155,7 @@ class TelemetryRouterTests(unittest.TestCase):
         self.assertEqual(
             [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
             [
+                "Module_01_FRTE",
                 "Module_14_CFIA",
                 "Module_11_CVIB",
                 "Module_12_IRTA",
@@ -163,7 +164,7 @@ class TelemetryRouterTests(unittest.TestCase):
         )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_01_FRTE"],
+            [],
         )
         self.assertFalse(report["substack_ready_flag"])
 
@@ -187,7 +188,7 @@ class TelemetryRouterTests(unittest.TestCase):
         )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_17_ERCA", "Module_01_FRTE"],
+            [],
         )
 
     def test_layer_one_smoke_executes_tlab_after_implementation(self) -> None:
@@ -212,9 +213,13 @@ class TelemetryRouterTests(unittest.TestCase):
             "Module_05_SFRA",
             [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
         )
+        self.assertIn(
+            "Module_10_OAPE",
+            [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
+        )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_10_OAPE"],
+            [],
         )
 
 

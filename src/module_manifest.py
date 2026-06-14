@@ -21,23 +21,23 @@ class ModuleSpec:
 
 
 MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
-    ModuleSpec(1, "FRTE", "Financial Risk Text Evolution", "layer_3_compliance", "FinancialRiskTextAuditor", "SPECIFIED"),
-    ModuleSpec(2, "APAC", "Asia-Pacific Cross-Market Transmission", "layer_2_valuation", "CrossMarketTransmissionAuditor", "SPECIFIED"),
-    ModuleSpec(3, "AMDG", "Asset Management Deliverable Gateway", "layer_4_strategy", "AssetManagementDeliverableAuditor", "SPECIFIED"),
-    ModuleSpec(4, "CASS", "Conflict-Aware Agent Sandbox", "layer_4_strategy", "ConflictAwareSandboxAuditor", "SPECIFIED"),
+    ModuleSpec(1, "FRTE", "Financial Risk Text Evolution", "layer_3_compliance", "FilingRiskDeltaAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_01_FRTE/frte_auditor.py"),
+    ModuleSpec(2, "APAC", "Asia-Pacific Cross-Market Transmission", "layer_2_valuation", "ApacContagionAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_02_APAC/apac_auditor.py"),
+    ModuleSpec(3, "AMDG", "Asset Management Deliverable Gateway", "layer_4_strategy", "InstitutionalDeliverableAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_03_AMDG/amdg_auditor.py"),
+    ModuleSpec(4, "CASS", "Conflict-Aware Agent Sandbox", "layer_4_strategy", "StrategyConflictAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_04_CASS/cass_auditor.py"),
     ModuleSpec(5, "SFRA", "SEC Footnote Reasoning Audit", "layer_1_telemetry", "SecFootnoteReasoningAuditor", "IMPLEMENTED", "evaluation_kernels/layer_1_telemetry/Module_05_SFRA/sfra_auditor.py"),
     ModuleSpec(6, "TLAB", "Technical Latency and API Benchmark", "layer_1_telemetry", "ApiTelemetryAuditor", "IMPLEMENTED", "evaluation_kernels/layer_1_telemetry/Module_06_TLAB/tlab_auditor.py"),
-    ModuleSpec(7, "BLSB", "Business-Language Strategy Benchmark", "layer_4_strategy", "BusinessLanguageAuditor", "SPECIFIED"),
+    ModuleSpec(7, "BLSB", "Business-Language Strategy Benchmark", "layer_4_strategy", "StrategyGroundingAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_07_BLSB/blsb_auditor.py"),
     ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_08_FOAS/foas_auditor.py"),
     ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_09_FITV/fitv_auditor.py"),
-    ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "SPECIFIED"),
+    ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "IMPLEMENTED", "evaluation_kernels/layer_1_telemetry/Module_10_OAPE/oape_auditor.py"),
     ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_11_CVIB/cvib_auditor.py"),
     ModuleSpec(12, "IRTA", "Buy-Side Institutional Research Thesis Audit", "layer_4_strategy", "InstitutionalResearchThesisAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_12_IRTA/institutional_research_thesis_auditor.py"),
     ModuleSpec(13, "BMAE", "Behavioral Market-Microstructure Alpha Engine", "layer_4_strategy", "BehavioralMarketAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_13_BMAE/behavioral_market_auditor.py"),
     ModuleSpec(14, "CFIA", "Corporate Financial Integrity Audit", "layer_2_valuation", "CorporateFinancialAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_14_CFIA/cfia_auditor.py"),
     ModuleSpec(15, "SCGV", "Supply Chain GenAI Validator", "layer_4_strategy", "SupplyChainAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_15_SCGV/supply_chain_auditor.py"),
-    ModuleSpec(16, "AMWE", "AI Model Walk-Forward Evaluation", "layer_3_compliance", "TimeSeriesLeakageAuditor", "SPECIFIED"),
-    ModuleSpec(17, "ERCA", "Enterprise Risk and Compliance Audit", "layer_3_compliance", "EnterpriseComplianceAuditor", "SPECIFIED"),
+    ModuleSpec(16, "AMWE", "Applied ML Workflow Evaluation", "layer_3_compliance", "AppliedMLWorkflowAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_16_AMWE/amwe_auditor.py"),
+    ModuleSpec(17, "ERCA", "Enterprise Risk & Compliance Audit", "layer_3_compliance", "EnterpriseRiskComplianceAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_17_ERCA/erca_auditor.py"),
     ModuleSpec(18, "IBDV", "Investment-Banking Deal Validation", "layer_2_valuation", "InvestmentBankingDealAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_18_IBDV/ibdv_auditor.py"),
 )
 

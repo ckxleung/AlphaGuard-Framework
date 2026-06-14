@@ -16,8 +16,8 @@ canonical module appears here with the same status as the immutable manifest.
 
 - Monitored universe: 56 tickers in `config/target_enterprises.json`.
 - Architecture coverage: 18 canonical modules across four functional layers.
-- Production auditors live: 10.
-- Specified auditors awaiting implementation: 8.
+- Production auditors live: 18.
+- Specified auditors awaiting implementation: 0.
 - Shared runtime contract: `BaseAuditor.execute_audit(ai_output, ground_truth)`.
 - Publication contract: Markdown report plus JSON sidecar validated by
   `src/output_standard.py`.
@@ -26,23 +26,23 @@ canonical module appears here with the same status as the immutable manifest.
 
 | ID | Code | Layer | Status | Build Wave | Promotion Gate |
 |---:|---|---|---|---|---|
-| 01 | FRTE | layer_3_compliance | SPECIFIED | Wave 3 | QoQ filing delta fixtures with source-span evidence |
-| 02 | APAC | layer_2_valuation | SPECIFIED | Wave 4 | Timestamped options-skew and regulatory-contagion fixtures |
-| 03 | AMDG | layer_4_strategy | SPECIFIED | Wave 4 | Render-inspection fixtures for institutional deliverables |
-| 04 | CASS | layer_4_strategy | SPECIFIED | Wave 5 | Persona constraint matrix and conflict-resolution fixtures |
+| 01 | FRTE | layer_3_compliance | IMPLEMENTED | Wave 3 | QoQ filing delta fixtures with source-span evidence |
+| 02 | APAC | layer_2_valuation | IMPLEMENTED | Wave 4 | Timestamped options-skew and regulatory-contagion fixtures |
+| 03 | AMDG | layer_4_strategy | IMPLEMENTED | Wave 4 | Render-inspection fixtures for institutional deliverables |
+| 04 | CASS | layer_4_strategy | IMPLEMENTED | Wave 5 | Persona constraint matrix and conflict-resolution fixtures |
 | 05 | SFRA | layer_1_telemetry | IMPLEMENTED | Live | SEC footnote, table-cell, citation-coordinate, and CLI tests passed |
 | 06 | TLAB | layer_1_telemetry | IMPLEMENTED | Live | Versioned API schema, generated-code, execution-trace, and CLI tests passed |
-| 07 | BLSB | layer_4_strategy | SPECIFIED | Wave 5 | Strategy claim-evidence mapping and actionability fixtures |
+| 07 | BLSB | layer_4_strategy | IMPLEMENTED | Wave 5 | Strategy claim-evidence mapping and actionability fixtures |
 | 08 | FOAS | layer_3_compliance | IMPLEMENTED | Live | Cent-level ledger, trial-balance, adjustment traceability, and CLI tests passed |
 | 09 | FITV | layer_2_valuation | IMPLEMENTED | Live | Bond price, duration, DV01, convention, and CLI tests passed |
-| 10 | OAPE | layer_1_telemetry | SPECIFIED | Wave 3 | Office package and rendered-layout pairwise fixtures |
+| 10 | OAPE | layer_1_telemetry | IMPLEMENTED | Live | Office artifact pairwise evaluation, defect severity, and CLI tests passed |
 | 11 | CVIB | layer_2_valuation | IMPLEMENTED | Live | DCF, WACC, terminal-value, per-share, multiple, convention, and CLI tests passed |
 | 12 | IRTA | layer_4_strategy | IMPLEMENTED | Live | Capacity-ceiling and CAGR boundary tests passed |
 | 13 | BMAE | layer_4_strategy | IMPLEMENTED | Live | Market-microstructure noise-filter tests passed |
 | 14 | CFIA | layer_2_valuation | IMPLEMENTED | Live | Operating-cash-flow reconciliation tests passed |
 | 15 | SCGV | layer_4_strategy | IMPLEMENTED | Live | Safety-stock and reorder-point stochastic tests passed |
-| 16 | AMWE | layer_3_compliance | SPECIFIED | Wave 3 | Time-series leakage and split-integrity fixtures |
-| 17 | ERCA | layer_3_compliance | SPECIFIED | Wave 4 | COSO-style control matrix and evidence-inventory fixtures |
+| 16 | AMWE | layer_3_compliance | IMPLEMENTED | Wave 3 | Time-series leakage and split-integrity fixtures |
+| 17 | ERCA | layer_3_compliance | IMPLEMENTED | Wave 4 | COSO-style control matrix and evidence-inventory fixtures |
 | 18 | IBDV | layer_2_valuation | IMPLEMENTED | Live | Enterprise-value capital-bridge tests passed |
 
 ## Recommended Build Sequence
@@ -77,10 +77,12 @@ auditable AI output.
 
 ### Wave 3: Forensic Evidence Expansion
 
-Promote `FRTE`, `OAPE`, and `AMWE` once ingestion fixtures exist:
+Promote `FRTE` and `AMWE` once ingestion fixtures exist. `OAPE` has been
+promoted to `IMPLEMENTED` and is now Live:
 
 - `Module_01_FRTE`: filing risk-delta omissions and invented changes;
-- `Module_10_OAPE`: office artifact structural and rendered-layout defects;
+- ~~`Module_10_OAPE`~~: **IMPLEMENTED** — office artifact structural and
+  rendered-layout defect evaluation with deterministic pairwise scoring;
 - `Module_16_AMWE`: temporal leakage and invalid model-validation splits.
 
 ### Wave 4: Enterprise and Cross-Market Controls
