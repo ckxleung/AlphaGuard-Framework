@@ -28,6 +28,56 @@
       "blended_asp": 5.0
     }
   },
+  "CVIB": {
+    "data_classification": "SYNTHETIC",
+    "evidence_refs": [
+      "DOC-SYNTHETIC-ALPHAGUARD-001"
+    ],
+    "ai_output": {
+      "ai_enterprise_value": 1610.38961038961,
+      "ai_equity_value": 1560.38961038961,
+      "ai_price_per_share": 156.038961038961,
+      "currency": "USD",
+      "valuation_date": "2026-06-14",
+      "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+      "terminal_value_method": "GORDON_GROWTH",
+      "ai_multiples": {
+        "EV_REVENUE_FY1": 4.0,
+        "P_E_FY1": 8.0
+      }
+    },
+    "ground_truth": {
+      "forecast_free_cash_flows": [
+        100.0,
+        110.0,
+        121.0
+      ],
+      "wacc": 0.1,
+      "terminal_growth_rate": 0.03,
+      "net_debt": 50.0,
+      "diluted_shares": 10.0,
+      "currency": "USD",
+      "valuation_date": "2026-06-14",
+      "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+      "source_id": "DOC-SYNTHETIC-ALPHAGUARD-001",
+      "comparable_company_metrics": [
+        {
+          "metric_name": "EV_REVENUE_FY1",
+          "numerator_basis": "ENTERPRISE_VALUE",
+          "numerator": 1000.0,
+          "denominator": 250.0,
+          "denominator_period": "FY1_FORWARD"
+        },
+        {
+          "metric_name": "P_E_FY1",
+          "numerator_basis": "EQUITY_VALUE",
+          "numerator": 800.0,
+          "denominator": 100.0,
+          "denominator_period": "FY1_FORWARD"
+        }
+      ]
+    }
+  },
   "IBDV": {
     "data_classification": "SYNTHETIC",
     "evidence_refs": [

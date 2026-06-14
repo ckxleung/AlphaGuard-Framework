@@ -16,8 +16,8 @@ canonical module appears here with the same status as the immutable manifest.
 
 - Monitored universe: 56 tickers in `config/target_enterprises.json`.
 - Architecture coverage: 18 canonical modules across four functional layers.
-- Production auditors live: 6.
-- Specified auditors awaiting implementation: 12.
+- Production auditors live: 7.
+- Specified auditors awaiting implementation: 11.
 - Shared runtime contract: `BaseAuditor.execute_audit(ai_output, ground_truth)`.
 - Publication contract: Markdown report plus JSON sidecar validated by
   `src/output_standard.py`.
@@ -36,7 +36,7 @@ canonical module appears here with the same status as the immutable manifest.
 | 08 | FOAS | layer_3_compliance | SPECIFIED | Wave 2 | Cent-level ledger and adjustment traceability fixtures |
 | 09 | FITV | layer_2_valuation | IMPLEMENTED | Live | Bond price, duration, DV01, convention, and CLI tests passed |
 | 10 | OAPE | layer_1_telemetry | SPECIFIED | Wave 3 | Office package and rendered-layout pairwise fixtures |
-| 11 | CVIB | layer_2_valuation | SPECIFIED | Wave 1 | DCF, WACC, terminal-value, and per-share valuation fixtures |
+| 11 | CVIB | layer_2_valuation | IMPLEMENTED | Live | DCF, WACC, terminal-value, per-share, multiple, convention, and CLI tests passed |
 | 12 | IRTA | layer_4_strategy | IMPLEMENTED | Live | Capacity-ceiling and CAGR boundary tests passed |
 | 13 | BMAE | layer_4_strategy | IMPLEMENTED | Live | Market-microstructure noise-filter tests passed |
 | 14 | CFIA | layer_2_valuation | IMPLEMENTED | Live | Operating-cash-flow reconciliation tests passed |
@@ -49,12 +49,13 @@ canonical module appears here with the same status as the immutable manifest.
 
 ### Wave 1: Valuation Demonstration Depth
 
-Promote `CVIB` next. Together with implemented `FITV`, `CFIA`, and `IBDV`, it
-completes the first high-value valuation demonstration lane:
+Wave 1 is now complete. Implemented `CVIB`, `FITV`, `CFIA`, and `IBDV` form the
+first high-value valuation demonstration lane:
 
 - `Module_09_FITV`: implemented fixed-income price, modified duration, and
   DV01 checks;
-- `Module_11_CVIB`: DCF, terminal value, WACC, and per-share valuation checks.
+- `Module_11_CVIB`: implemented DCF, terminal value, WACC, per-share value, and
+  comparable-company multiple checks.
 
 This wave is the most useful for buy-side, banking, and independent-research
 readers because it produces deterministic finance math that is easy to inspect.

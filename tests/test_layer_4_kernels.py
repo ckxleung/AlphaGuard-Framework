@@ -225,15 +225,41 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_six_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_seven_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
+        forecast_free_cash_flows = [100.0, 110.0, 121.0]
+        wacc = 0.10
+        terminal_growth_rate = 0.03
+        present_value_cash_flows = sum(
+            cash_flow / ((1.0 + wacc) ** year)
+            for year, cash_flow in enumerate(forecast_free_cash_flows, start=1)
+        )
+        terminal_value = forecast_free_cash_flows[-1] * (
+            1.0 + terminal_growth_rate
+        ) / (wacc - terminal_growth_rate)
+        enterprise_value = present_value_cash_flows + terminal_value / (
+            (1.0 + wacc) ** len(forecast_free_cash_flows)
+        )
+        equity_value = enterprise_value - 50.0
+        price_per_share = equity_value / 10.0
         report = run_pipeline(
             {
                 "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
                 "reported_operating_cash_flow": 5_080_000_000,
                 "calculated_enterprise_value": 168_000_000_000,
+                "ai_enterprise_value": enterprise_value,
+                "ai_equity_value": equity_value,
+                "ai_price_per_share": price_per_share,
+                "currency": "USD",
+                "valuation_date": "2026-06-12",
+                "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+                "terminal_value_method": "GORDON_GROWTH",
+                "ai_multiples": {
+                    "EV_REVENUE_FY1": 4.0,
+                    "P_E_FY1": 8.0,
+                },
                 "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
                 "rating": "Buy",
                 "reorder_point": 1000.0 + safety_stock,
@@ -268,6 +294,28 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "reported_enterprise_value": 168_000_000_000,
                 "equity_value_basis": "SYNTHETIC_MARKET_CAPITALIZATION",
                 "valuation_date": "2026-06-12",
+                "forecast_free_cash_flows": forecast_free_cash_flows,
+                "wacc": wacc,
+                "terminal_growth_rate": terminal_growth_rate,
+                "net_debt": 50.0,
+                "diluted_shares": 10.0,
+                "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+                "comparable_company_metrics": [
+                    {
+                        "metric_name": "EV_REVENUE_FY1",
+                        "numerator_basis": "ENTERPRISE_VALUE",
+                        "numerator": 1000.0,
+                        "denominator": 250.0,
+                        "denominator_period": "FY1_FORWARD",
+                    },
+                    {
+                        "metric_name": "P_E_FY1",
+                        "numerator_basis": "EQUITY_VALUE",
+                        "numerator": 800.0,
+                        "denominator": 100.0,
+                        "denominator_period": "FY1_FORWARD",
+                    },
+                ],
                 "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
                 "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
                 "discussion_volume": [100.0, 110.0, 120.0, 130.0],
@@ -291,10 +339,10 @@ class ManifestIntegrationTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(report["executed_modules"], 6)
+        self.assertEqual(report["executed_modules"], 7)
         self.assertEqual(
             set(report["results"]),
-            {"FITV", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
+            {"FITV", "CVIB", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
         )
         self.assertTrue(
             all(

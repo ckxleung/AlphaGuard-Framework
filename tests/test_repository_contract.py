@@ -185,8 +185,8 @@ class RepositoryStructureTests(unittest.TestCase):
         self.assertIn("## Implementation Matrix", roadmap)
         self.assertIn("## Recommended Build Sequence", roadmap)
         self.assertIn("## Promotion Checklist", roadmap)
-        self.assertIn("Production auditors live: 6.", roadmap)
-        self.assertIn("Specified auditors awaiting implementation: 12.", roadmap)
+        self.assertIn("Production auditors live: 7.", roadmap)
+        self.assertIn("Specified auditors awaiting implementation: 11.", roadmap)
 
         for specification in MODULE_SPECS:
             expected_row = (
@@ -205,7 +205,7 @@ class RepositoryStructureTests(unittest.TestCase):
             roadmap,
         )
         self.assertIn(
-            "| 11 | CVIB | layer_2_valuation | SPECIFIED | Wave 1 |",
+            "| 11 | CVIB | layer_2_valuation | IMPLEMENTED | Live |",
             roadmap,
         )
         self.assertIn("Module_18_IBDV", roadmap)

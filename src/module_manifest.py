@@ -31,7 +31,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "SPECIFIED"),
     ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_09_FITV/fitv_auditor.py"),
     ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "SPECIFIED"),
-    ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "SPECIFIED"),
+    ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_11_CVIB/cvib_auditor.py"),
     ModuleSpec(12, "IRTA", "Buy-Side Institutional Research Thesis Audit", "layer_4_strategy", "InstitutionalResearchThesisAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_12_IRTA/institutional_research_thesis_auditor.py"),
     ModuleSpec(13, "BMAE", "Behavioral Market-Microstructure Alpha Engine", "layer_4_strategy", "BehavioralMarketAuditor", "IMPLEMENTED", "evaluation_kernels/layer_4_strategy/Module_13_BMAE/behavioral_market_auditor.py"),
     ModuleSpec(14, "CFIA", "Corporate Financial Integrity Audit", "layer_2_valuation", "CorporateFinancialAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_14_CFIA/cfia_auditor.py"),

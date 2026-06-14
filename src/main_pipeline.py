@@ -189,11 +189,41 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         1.0 + yield_to_maturity / coupon_frequency
     )
     dv01 = modified_duration * dirty_price * 0.0001
+    forecast_free_cash_flows = [100.0, 110.0, 121.0]
+    wacc = 0.10
+    terminal_growth_rate = 0.03
+    present_value_cash_flows = sum(
+        cash_flow / math.pow(1.0 + wacc, year)
+        for year, cash_flow in enumerate(forecast_free_cash_flows, start=1)
+    )
+    terminal_value = forecast_free_cash_flows[-1] * (
+        1.0 + terminal_growth_rate
+    ) / (wacc - terminal_growth_rate)
+    discounted_terminal_value = terminal_value / math.pow(
+        1.0 + wacc,
+        len(forecast_free_cash_flows),
+    )
+    cvib_enterprise_value = present_value_cash_flows + discounted_terminal_value
+    cvib_net_debt = 50.0
+    cvib_diluted_shares = 10.0
+    cvib_equity_value = cvib_enterprise_value - cvib_net_debt
+    cvib_price_per_share = cvib_equity_value / cvib_diluted_shares
     ai_output = {
         "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
         "investment_thesis": "NVDA demand remains supported by disclosed capacity expansion.",
         "reported_operating_cash_flow": 5_080_000_000,
         "calculated_enterprise_value": 168_000_000_000,
+        "ai_enterprise_value": cvib_enterprise_value,
+        "ai_equity_value": cvib_equity_value,
+        "ai_price_per_share": cvib_price_per_share,
+        "currency": "USD",
+        "valuation_date": "2026-06-12",
+        "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+        "terminal_value_method": "GORDON_GROWTH",
+        "ai_multiples": {
+            "EV_REVENUE_FY1": 4.0,
+            "P_E_FY1": 8.0,
+        },
         "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
         "rating": "Buy",
         "reorder_point": reorder_point,
@@ -228,6 +258,28 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "reported_enterprise_value": 168_000_000_000,
         "equity_value_basis": "SYNTHETIC_MARKET_CAPITALIZATION",
         "valuation_date": "2026-06-12",
+        "forecast_free_cash_flows": forecast_free_cash_flows,
+        "wacc": wacc,
+        "terminal_growth_rate": terminal_growth_rate,
+        "net_debt": cvib_net_debt,
+        "diluted_shares": cvib_diluted_shares,
+        "share_count_basis": "DILUTED_WEIGHTED_AVERAGE",
+        "comparable_company_metrics": [
+            {
+                "metric_name": "EV_REVENUE_FY1",
+                "numerator_basis": "ENTERPRISE_VALUE",
+                "numerator": 1000.0,
+                "denominator": 250.0,
+                "denominator_period": "FY1_FORWARD",
+            },
+            {
+                "metric_name": "P_E_FY1",
+                "numerator_basis": "EQUITY_VALUE",
+                "numerator": 800.0,
+                "denominator": 100.0,
+                "denominator_period": "FY1_FORWARD",
+            },
+        ],
         "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
         "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
         "discussion_volume": [100.0, 110.0, 120.0, 130.0],

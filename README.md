@@ -29,8 +29,8 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-FITV, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the
-remaining 12 modules have complete specification contracts but remain explicitly
+FITV, CVIB, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the
+remaining 11 modules have complete specification contracts but remain explicitly
 `SPECIFIED` until their executable auditors and adversarial fixtures are
 implemented.
 
@@ -196,8 +196,11 @@ and implementation path have all been reviewed and tested.
 `SPECIFIED` means the module has a complete entry in
 `src/kernel_spec_catalog.py`; it does not mean executable kernel code exists.
 
-The next recommended build target is `CVIB`, which completes Wave 1 around live
-`FITV`, `CFIA`, and `IBDV` valuation auditors.
+Wave 1 is now complete: `FITV`, `CVIB`, `CFIA`, and `IBDV` provide a deterministic
+valuation lane covering fixed income, DCF/per-share valuation, operating cash
+flow, and enterprise-value bridge checks. The next recommended build targets
+are `FOAS`, `TLAB`, and `SFRA`, which expand the daily infrastructure and filing
+evidence layer.
 
 ## Open-Core Security Boundary
 

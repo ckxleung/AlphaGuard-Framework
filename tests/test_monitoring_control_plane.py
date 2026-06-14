@@ -124,7 +124,8 @@ class MonitoringPolicyTests(unittest.TestCase):
         )
 
         self.assertIn("FITV", plan["executable_modules"])
-        self.assertIn("CVIB", plan["unavailable_modules"])
+        self.assertIn("CVIB", plan["executable_modules"])
+        self.assertNotIn("CVIB", plan["unavailable_modules"])
         with self.assertRaisesRegex(ValueError, "ticker"):
             plan_monitoring_event(
                 {

@@ -154,11 +154,16 @@ class TelemetryRouterTests(unittest.TestCase):
         self.assertEqual(report["routing_specs"]["market_event"], "EARNINGS_RELEASE")
         self.assertEqual(
             [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
-            ["Module_14_CFIA", "Module_12_IRTA", "Module_18_IBDV"],
+            [
+                "Module_14_CFIA",
+                "Module_11_CVIB",
+                "Module_12_IRTA",
+                "Module_18_IBDV",
+            ],
         )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_01_FRTE", "Module_11_CVIB"],
+            ["Module_01_FRTE"],
         )
         self.assertFalse(report["substack_ready_flag"])
 
