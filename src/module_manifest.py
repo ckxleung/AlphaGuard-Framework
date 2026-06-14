@@ -25,7 +25,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(2, "APAC", "Asia-Pacific Cross-Market Transmission", "layer_2_valuation", "CrossMarketTransmissionAuditor", "SPECIFIED"),
     ModuleSpec(3, "AMDG", "Asset Management Deliverable Gateway", "layer_4_strategy", "AssetManagementDeliverableAuditor", "SPECIFIED"),
     ModuleSpec(4, "CASS", "Conflict-Aware Agent Sandbox", "layer_4_strategy", "ConflictAwareSandboxAuditor", "SPECIFIED"),
-    ModuleSpec(5, "SFRA", "SEC Footnote Reasoning Audit", "layer_1_telemetry", "SecFootnoteReasoningAuditor", "SPECIFIED"),
+    ModuleSpec(5, "SFRA", "SEC Footnote Reasoning Audit", "layer_1_telemetry", "SecFootnoteReasoningAuditor", "IMPLEMENTED", "evaluation_kernels/layer_1_telemetry/Module_05_SFRA/sfra_auditor.py"),
     ModuleSpec(6, "TLAB", "Technical Latency and API Benchmark", "layer_1_telemetry", "ApiTelemetryAuditor", "IMPLEMENTED", "evaluation_kernels/layer_1_telemetry/Module_06_TLAB/tlab_auditor.py"),
     ModuleSpec(7, "BLSB", "Business-Language Strategy Benchmark", "layer_4_strategy", "BusinessLanguageAuditor", "SPECIFIED"),
     ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_08_FOAS/foas_auditor.py"),

@@ -3,6 +3,16 @@
 All notable AlphaGuard Framework changes are recorded here. The project follows
 human-readable milestone versions until public package releases begin.
 
+## v0.6.0 - 2026-06-14
+
+- Added `Module_05_SFRA` as a production auditor.
+- Introduced SEC filing footnote-boundary, table-cell, cross-reference graph,
+  answer-value, source-coordinate, and position-bucket retrieval checks.
+- Updated Layer 1 smoke coverage so foundational telemetry routes execute SFRA
+  and TLAB while disclosing only unavailable OAPE.
+- Raised the implementation baseline to 10 production auditors and 8 specified
+  auditors awaiting promotion.
+
 ## v0.5.0 - 2026-06-14
 
 - Added `Module_06_TLAB` as a production auditor.

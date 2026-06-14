@@ -239,6 +239,11 @@ def run_client(api_key, user_input):
                 raise
             time.sleep(1)
 '''
+    filing_text = (
+        "Note 7 Revenue Recognition says remaining performance obligations "
+        "were $42.0 million. Later, Note 12 Debt says convertible debt "
+        "principal was $125.5 million."
+    )
     ai_output = {
         "generated_code": generated_api_code,
         "declared_api_version": "2026-06-01",
@@ -260,6 +265,52 @@ def run_client(api_key, user_input):
                 "tool_name": "calculate_metric",
                 "status": "SUCCESS",
                 "output": {"metric_value": 42.0004},
+            },
+        ],
+        "ai_answers": [
+            {
+                "question_id": "Q1",
+                "answer_text": (
+                    "Remaining performance obligations were $42.0 million."
+                ),
+                "numeric_answer": 42.0,
+                "unit": "USD_MILLIONS",
+                "cited_span_ids": ["S1"],
+                "cited_cell_ids": ["T7.RPO"],
+            },
+            {
+                "question_id": "Q2",
+                "answer_text": (
+                    "Convertible debt principal was $125.5 million."
+                ),
+                "numeric_answer": 125.5,
+                "unit": "USD_MILLIONS",
+                "cited_span_ids": ["S2"],
+                "cited_cell_ids": ["T12.DEBT"],
+            },
+        ],
+        "cited_evidence_spans": [
+            {
+                "span_id": "S1",
+                "footnote_id": "N7",
+                "source_coordinate": "p84:note7:table1:r2:c3",
+                "start_char": 0,
+                "end_char": 82,
+                "text": (
+                    "Note 7 Revenue Recognition says remaining performance "
+                    "obligations were $42.0 million."
+                ),
+            },
+            {
+                "span_id": "S2",
+                "footnote_id": "N12",
+                "source_coordinate": "p103:note12:table2:r5:c2",
+                "start_char": 86,
+                "end_char": 157,
+                "text": (
+                    "Note 12 Debt says convertible debt principal was "
+                    "$125.5 million."
+                ),
             },
         ],
         "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
@@ -326,6 +377,74 @@ def run_client(api_key, user_input):
         "coupon_frequency": coupon_frequency,
     }
     ground_truth = {
+        "filing_text": filing_text,
+        "footnote_boundaries": [
+            {
+                "footnote_id": "N7",
+                "title": "Revenue Recognition",
+                "start_char": 0,
+                "end_char": 82,
+                "position_bucket": "middle",
+            },
+            {
+                "footnote_id": "N12",
+                "title": "Debt",
+                "start_char": 86,
+                "end_char": 157,
+                "position_bucket": "end",
+            },
+        ],
+        "table_cells": [
+            {
+                "cell_id": "T7.RPO",
+                "footnote_id": "N7",
+                "label": "Remaining performance obligations",
+                "value": 42.0,
+                "unit": "USD_MILLIONS",
+                "source_coordinate": "p84:note7:table1:r2:c3",
+                "position_bucket": "middle",
+            },
+            {
+                "cell_id": "T12.DEBT",
+                "footnote_id": "N12",
+                "label": "Convertible debt principal",
+                "value": 125.5,
+                "unit": "USD_MILLIONS",
+                "source_coordinate": "p103:note12:table2:r5:c2",
+                "position_bucket": "end",
+            },
+        ],
+        "cross_reference_graph": [
+            {
+                "question_id": "Q1",
+                "required_footnote_ids": ["N7"],
+                "required_cell_ids": ["T7.RPO"],
+            },
+            {
+                "question_id": "Q2",
+                "required_footnote_ids": ["N12"],
+                "required_cell_ids": ["T12.DEBT"],
+            },
+        ],
+        "benchmark_questions": [
+            {
+                "question_id": "Q1",
+                "prompt": "What were remaining performance obligations?",
+                "expected_numeric_answer": 42.0,
+                "expected_unit": "USD_MILLIONS",
+                "numeric_tolerance": 0.01,
+                "position_bucket": "middle",
+            },
+            {
+                "question_id": "Q2",
+                "prompt": "What was convertible debt principal?",
+                "expected_numeric_answer": 125.5,
+                "expected_unit": "USD_MILLIONS",
+                "numeric_tolerance": 0.01,
+                "position_bucket": "end",
+            },
+        ],
+        "filing_id": "SYNTH-10K-2026",
         "api_schema": {
             "api_version": "2026-06-01",
             "endpoint": "/v1/responses",

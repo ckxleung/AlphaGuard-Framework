@@ -208,9 +208,13 @@ class TelemetryRouterTests(unittest.TestCase):
             "Module_06_TLAB",
             [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
         )
+        self.assertIn(
+            "Module_05_SFRA",
+            [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
+        )
         self.assertEqual(
             report["unavailable_kernels"],
-            ["Module_05_SFRA", "Module_10_OAPE"],
+            ["Module_10_OAPE"],
         )
 
 

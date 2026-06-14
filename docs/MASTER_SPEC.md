@@ -13,7 +13,7 @@ the previously missing unique ID.
 | 02 | APAC | Layer 2 Valuation | Specified |
 | 03 | AMDG | Layer 4 Strategy | Specified |
 | 04 | CASS | Layer 4 Strategy | Specified |
-| 05 | SFRA | Layer 1 Telemetry | Specified |
+| 05 | SFRA | Layer 1 Telemetry | Implemented |
 | 06 | TLAB | Layer 1 Telemetry | Implemented |
 | 07 | BLSB | Layer 4 Strategy | Specified |
 | 08 | FOAS | Layer 3 Compliance | Implemented |
