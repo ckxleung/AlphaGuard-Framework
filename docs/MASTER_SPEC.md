@@ -16,7 +16,7 @@ the previously missing unique ID.
 | 05 | SFRA | Layer 1 Telemetry | Specified |
 | 06 | TLAB | Layer 1 Telemetry | Specified |
 | 07 | BLSB | Layer 4 Strategy | Specified |
-| 08 | FOAS | Layer 3 Compliance | Specified |
+| 08 | FOAS | Layer 3 Compliance | Implemented |
 | 09 | FITV | Layer 2 Valuation | Implemented |
 | 10 | OAPE | Layer 1 Telemetry | Specified |
 | 11 | CVIB | Layer 2 Valuation | Implemented |

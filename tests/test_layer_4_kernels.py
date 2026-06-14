@@ -225,7 +225,7 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_seven_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_eight_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
@@ -260,6 +260,38 @@ class ManifestIntegrationTests(unittest.TestCase):
                     "EV_REVENUE_FY1": 4.0,
                     "P_E_FY1": 8.0,
                 },
+                "ai_reconciliation": {
+                    "is_balanced": True,
+                    "total_debits": "1250.00",
+                    "total_credits": "1250.00",
+                    "unreconciled_accounts": [],
+                },
+                "proposed_adjustments": [
+                    {
+                        "adjustment_id": "ADJ-001",
+                        "entries": [
+                            {
+                                "entity": "ALPHA_US",
+                                "account": "6100_EXPENSE",
+                                "debit": "10.00",
+                                "credit": "0.00",
+                                "currency": "USD",
+                                "period_end": "2026-03-31",
+                                "source_row_ids": ["L3"],
+                            },
+                            {
+                                "entity": "ALPHA_US",
+                                "account": "2000_PAYABLES",
+                                "debit": "0.00",
+                                "credit": "10.00",
+                                "currency": "USD",
+                                "period_end": "2026-03-31",
+                                "source_row_ids": ["L4"],
+                            },
+                        ],
+                    }
+                ],
+                "control_narrative": "Ledger rows reconcile to the trial balance.",
                 "sentiment_changes": [0.1, 0.2, 0.3, 0.4],
                 "rating": "Buy",
                 "reorder_point": 1000.0 + safety_stock,
@@ -316,6 +348,85 @@ class ManifestIntegrationTests(unittest.TestCase):
                         "denominator_period": "FY1_FORWARD",
                     },
                 ],
+                "ledger_rows": [
+                    {
+                        "row_id": "L1",
+                        "entity": "ALPHA_US",
+                        "account": "1000_CASH",
+                        "debit": "1000.00",
+                        "credit": "0.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "row_id": "L2",
+                        "entity": "ALPHA_US",
+                        "account": "4000_REVENUE",
+                        "debit": "0.00",
+                        "credit": "1000.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "row_id": "L3",
+                        "entity": "ALPHA_US",
+                        "account": "6100_EXPENSE",
+                        "debit": "250.00",
+                        "credit": "0.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "row_id": "L4",
+                        "entity": "ALPHA_US",
+                        "account": "2000_PAYABLES",
+                        "debit": "0.00",
+                        "credit": "250.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                ],
+                "trial_balance": [
+                    {
+                        "entity": "ALPHA_US",
+                        "account": "1000_CASH",
+                        "debit": "1000.00",
+                        "credit": "0.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "entity": "ALPHA_US",
+                        "account": "4000_REVENUE",
+                        "debit": "0.00",
+                        "credit": "1000.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "entity": "ALPHA_US",
+                        "account": "6100_EXPENSE",
+                        "debit": "250.00",
+                        "credit": "0.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                    {
+                        "entity": "ALPHA_US",
+                        "account": "2000_PAYABLES",
+                        "debit": "0.00",
+                        "credit": "250.00",
+                        "currency": "USD",
+                        "period_end": "2026-03-31",
+                    },
+                ],
+                "account_mapping": {
+                    "1000_CASH": "ASSET",
+                    "4000_REVENUE": "REVENUE",
+                    "6100_EXPENSE": "EXPENSE",
+                    "2000_PAYABLES": "LIABILITY",
+                },
+                "period_end": "2026-03-31",
                 "block_trades_outflow": [-5.0, -8.0, -10.0, -12.0],
                 "retail_orderflow_imbalance": [2.0, 3.0, 4.0, 5.0],
                 "discussion_volume": [100.0, 110.0, 120.0, 130.0],
@@ -339,10 +450,10 @@ class ManifestIntegrationTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(report["executed_modules"], 7)
+        self.assertEqual(report["executed_modules"], 8)
         self.assertEqual(
             set(report["results"]),
-            {"FITV", "CVIB", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
+            {"FOAS", "FITV", "CVIB", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
         )
         self.assertTrue(
             all(

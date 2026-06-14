@@ -29,8 +29,8 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-FITV, CVIB, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and registered; the
-remaining 11 modules have complete specification contracts but remain explicitly
+FOAS, FITV, CVIB, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and
+registered; the remaining 10 modules have complete specification contracts but remain explicitly
 `SPECIFIED` until their executable auditors and adversarial fixtures are
 implemented.
 
@@ -198,9 +198,21 @@ and implementation path have all been reviewed and tested.
 
 Wave 1 is now complete: `FITV`, `CVIB`, `CFIA`, and `IBDV` provide a deterministic
 valuation lane covering fixed income, DCF/per-share valuation, operating cash
-flow, and enterprise-value bridge checks. The next recommended build targets
-are `FOAS`, `TLAB`, and `SFRA`, which expand the daily infrastructure and filing
-evidence layer.
+flow, and enterprise-value bridge checks. Wave 2 has begun with `FOAS`, adding
+cent-level ledger, trial-balance, and adjustment traceability controls. The next
+recommended build targets are `TLAB` and `SFRA`, which expand API-contract and
+filing-evidence coverage.
+
+## Version History
+
+| Version | Date | Summary |
+|---|---|---|
+| v0.4.0 | 2026-06-14 | Added `FOAS`, bringing the framework to 8 production auditors and opening Wave 2 financial-operations evidence coverage. |
+| v0.3.0 | 2026-06-14 | Added `CVIB`, completing the Wave 1 valuation lane with DCF, per-share, and comparable-multiple checks. |
+| v0.2.0 | 2026-06-13 | Added source registry, publication evidence contract, and event-driven monitoring examples. |
+| v0.1.0 | 2026-06-12 | Established the 18-kernel architecture, four functional layers, router, pipeline, and first production auditors. |
+
+See [`CHANGELOG.md`](CHANGELOG.md) for the fuller release log.
 
 ## Open-Core Security Boundary
 

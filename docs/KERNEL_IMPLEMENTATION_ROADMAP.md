@@ -16,8 +16,8 @@ canonical module appears here with the same status as the immutable manifest.
 
 - Monitored universe: 56 tickers in `config/target_enterprises.json`.
 - Architecture coverage: 18 canonical modules across four functional layers.
-- Production auditors live: 7.
-- Specified auditors awaiting implementation: 11.
+- Production auditors live: 8.
+- Specified auditors awaiting implementation: 10.
 - Shared runtime contract: `BaseAuditor.execute_audit(ai_output, ground_truth)`.
 - Publication contract: Markdown report plus JSON sidecar validated by
   `src/output_standard.py`.
@@ -33,7 +33,7 @@ canonical module appears here with the same status as the immutable manifest.
 | 05 | SFRA | layer_1_telemetry | SPECIFIED | Wave 2 | SEC footnote retrieval fixtures with coordinate citations |
 | 06 | TLAB | layer_1_telemetry | SPECIFIED | Wave 2 | Versioned API schema and execution-trace fixtures |
 | 07 | BLSB | layer_4_strategy | SPECIFIED | Wave 5 | Strategy claim-evidence mapping and actionability fixtures |
-| 08 | FOAS | layer_3_compliance | SPECIFIED | Wave 2 | Cent-level ledger and adjustment traceability fixtures |
+| 08 | FOAS | layer_3_compliance | IMPLEMENTED | Live | Cent-level ledger, trial-balance, adjustment traceability, and CLI tests passed |
 | 09 | FITV | layer_2_valuation | IMPLEMENTED | Live | Bond price, duration, DV01, convention, and CLI tests passed |
 | 10 | OAPE | layer_1_telemetry | SPECIFIED | Wave 3 | Office package and rendered-layout pairwise fixtures |
 | 11 | CVIB | layer_2_valuation | IMPLEMENTED | Live | DCF, WACC, terminal-value, per-share, multiple, convention, and CLI tests passed |
@@ -62,11 +62,11 @@ readers because it produces deterministic finance math that is easy to inspect.
 
 ### Wave 2: Daily Infrastructure Credibility
 
-Promote `FOAS`, `TLAB`, and `SFRA` after Wave 1. This adds ledger discipline,
-API-contract checking, and long-context filing evidence to the daily telemetry
-loop:
+`FOAS` is now implemented. Promote `TLAB` and `SFRA` next to add API-contract
+checking and long-context filing evidence to the daily telemetry loop:
 
-- `Module_08_FOAS`: ledger, trial-balance, and adjustment reconciliation;
+- `Module_08_FOAS`: implemented ledger, trial-balance, and adjustment
+  reconciliation;
 - `Module_06_TLAB`: API schema, generated-code, and tool-trace validation;
 - `Module_05_SFRA`: SEC footnote retrieval and citation integrity.
 

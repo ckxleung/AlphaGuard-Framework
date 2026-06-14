@@ -167,6 +167,29 @@ class TelemetryRouterTests(unittest.TestCase):
         )
         self.assertFalse(report["substack_ready_flag"])
 
+    def test_layer_three_smoke_executes_foas_after_implementation(self) -> None:
+        from datetime import datetime, timezone
+
+        from src.main_pipeline import run_daily_smoke
+
+        report = run_daily_smoke(
+            "TSLA",
+            observed_at=datetime(2026, 6, 14, 15, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(
+            report["routing_specs"]["target_infrastructure_layer"],
+            "Layer_3_Regulatory_Compliance",
+        )
+        self.assertIn(
+            "Module_08_FOAS",
+            [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
+        )
+        self.assertEqual(
+            report["unavailable_kernels"],
+            ["Module_17_ERCA", "Module_01_FRTE"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

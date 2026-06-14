@@ -28,7 +28,7 @@ MODULE_SPECS: Final[tuple[ModuleSpec, ...]] = (
     ModuleSpec(5, "SFRA", "SEC Footnote Reasoning Audit", "layer_1_telemetry", "SecFootnoteReasoningAuditor", "SPECIFIED"),
     ModuleSpec(6, "TLAB", "Technical Latency and API Benchmark", "layer_1_telemetry", "ApiTelemetryAuditor", "SPECIFIED"),
     ModuleSpec(7, "BLSB", "Business-Language Strategy Benchmark", "layer_4_strategy", "BusinessLanguageAuditor", "SPECIFIED"),
-    ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "SPECIFIED"),
+    ModuleSpec(8, "FOAS", "Financial Operations Automated Settlement", "layer_3_compliance", "FinancialReconciliationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_3_compliance/Module_08_FOAS/foas_auditor.py"),
     ModuleSpec(9, "FITV", "Fixed-Income Term-Structure Validation", "layer_2_valuation", "FixedIncomeAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_09_FITV/fitv_auditor.py"),
     ModuleSpec(10, "OAPE", "Office Artifact Pair Evaluation", "layer_1_telemetry", "OfficeArtifactAuditor", "SPECIFIED"),
     ModuleSpec(11, "CVIB", "Core Valuation Integrity Benchmark", "layer_2_valuation", "CoreValuationAuditor", "IMPLEMENTED", "evaluation_kernels/layer_2_valuation/Module_11_CVIB/cvib_auditor.py"),
