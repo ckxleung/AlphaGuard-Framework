@@ -3,6 +3,16 @@
 All notable AlphaGuard Framework changes are recorded here. The project follows
 human-readable milestone versions until public package releases begin.
 
+## v0.5.0 - 2026-06-14
+
+- Added `Module_06_TLAB` as a production auditor.
+- Introduced versioned API schema, generated Python code, auth header,
+  rate-limit retry, error-handling, and chained execution-trace checks.
+- Updated Layer 1 smoke coverage so foundational telemetry routes can execute
+  TLAB while still disclosing unavailable SFRA and OAPE kernels.
+- Raised the implementation baseline to 9 production auditors and 9 specified
+  auditors awaiting promotion.
+
 ## v0.4.0 - 2026-06-14
 
 - Added `Module_08_FOAS` as a production auditor.

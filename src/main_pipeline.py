@@ -208,7 +208,60 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
     cvib_diluted_shares = 10.0
     cvib_equity_value = cvib_enterprise_value - cvib_net_debt
     cvib_price_per_share = cvib_equity_value / cvib_diluted_shares
+    generated_api_code = '''
+import time
+import requests
+
+API_VERSION = "2026-06-01"
+
+def run_client(api_key, user_input):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "X-API-Version": API_VERSION,
+    }
+    payload = {"model": "gpt-5.4", "input": user_input}
+    for attempt in range(3):
+        try:
+            response = requests.post(
+                "https://api.vendor.example/v1/responses",
+                headers=headers,
+                json=payload,
+                timeout=30,
+            )
+            if response.status_code == 429:
+                time.sleep(int(response.headers.get("Retry-After", "1")))
+                continue
+            response.raise_for_status()
+            return response.json()["output_text"]
+        except requests.RequestException:
+            if attempt == 2:
+                raise
+            time.sleep(1)
+'''
     ai_output = {
+        "generated_code": generated_api_code,
+        "declared_api_version": "2026-06-01",
+        "execution_trace": [
+            {
+                "step_id": "extract",
+                "tool_name": "extract_filing",
+                "status": "SUCCESS",
+                "output": {"filing_id": "10-K-001"},
+            },
+            {
+                "step_id": "search",
+                "tool_name": "search_filings",
+                "status": "SUCCESS",
+                "output": {"matches": ["note-7"]},
+            },
+            {
+                "step_id": "calculate",
+                "tool_name": "calculate_metric",
+                "status": "SUCCESS",
+                "output": {"metric_value": 42.0004},
+            },
+        ],
         "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
         "investment_thesis": "NVDA demand remains supported by disclosed capacity expansion.",
         "reported_operating_cash_flow": 5_080_000_000,
@@ -273,6 +326,46 @@ def _daily_smoke_inputs() -> tuple[dict[str, Any], dict[str, Any]]:
         "coupon_frequency": coupon_frequency,
     }
     ground_truth = {
+        "api_schema": {
+            "api_version": "2026-06-01",
+            "endpoint": "/v1/responses",
+            "method": "POST",
+            "required_payload_fields": ["model", "input"],
+            "required_response_fields": ["output_text"],
+        },
+        "breaking_change_manifest": {
+            "deprecated_versions": ["2025-01-01"],
+            "removed_endpoints": ["/v1/completions"],
+        },
+        "required_headers": [
+            "Authorization",
+            "Content-Type",
+            "X-API-Version",
+        ],
+        "rate_limit_policy": {
+            "requires_429_retry": True,
+            "retry_after_header": "Retry-After",
+            "min_retry_attempts": 3,
+        },
+        "mandatory_tool_steps": [
+            {
+                "step_id": "extract",
+                "tool_name": "extract_filing",
+                "required_output_keys": ["filing_id"],
+            },
+            {
+                "step_id": "search",
+                "tool_name": "search_filings",
+                "required_output_keys": ["matches"],
+            },
+            {
+                "step_id": "calculate",
+                "tool_name": "calculate_metric",
+                "required_output_keys": ["metric_value"],
+                "expected_numeric_output": 42.0,
+                "numeric_tolerance": 0.001,
+            },
+        ],
         "current_capacity": 100.0,
         "capex_additions": [10.0, 10.0, 10.0, 10.0, 10.0],
         "capital_efficiency": 2.0,

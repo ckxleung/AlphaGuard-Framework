@@ -29,8 +29,8 @@ evaluation kernels are implemented:
 - a one-command pipeline entry point.
 
 The repaired source specification now defines all 18 unique module codes.
-FOAS, FITV, CVIB, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and
-registered; the remaining 10 modules have complete specification contracts but remain explicitly
+TLAB, FOAS, FITV, CVIB, IRTA, BMAE, CFIA, SCGV, and IBDV are implemented and
+registered; the remaining 9 modules have complete specification contracts but remain explicitly
 `SPECIFIED` until their executable auditors and adversarial fixtures are
 implemented.
 
@@ -198,15 +198,16 @@ and implementation path have all been reviewed and tested.
 
 Wave 1 is now complete: `FITV`, `CVIB`, `CFIA`, and `IBDV` provide a deterministic
 valuation lane covering fixed income, DCF/per-share valuation, operating cash
-flow, and enterprise-value bridge checks. Wave 2 has begun with `FOAS`, adding
-cent-level ledger, trial-balance, and adjustment traceability controls. The next
-recommended build targets are `TLAB` and `SFRA`, which expand API-contract and
-filing-evidence coverage.
+flow, and enterprise-value bridge checks. Wave 2 now includes `FOAS` and `TLAB`,
+adding cent-level ledger controls plus versioned API/code/trace telemetry. The
+next recommended build target is `SFRA`, which expands SEC filing and
+long-context citation evidence coverage.
 
 ## Version History
 
 | Version | Date | Summary |
 |---|---|---|
+| v0.5.0 | 2026-06-14 | Added `TLAB`, bringing the framework to 9 production auditors and adding API-contract/code-trace telemetry coverage. |
 | v0.4.0 | 2026-06-14 | Added `FOAS`, bringing the framework to 8 production auditors and opening Wave 2 financial-operations evidence coverage. |
 | v0.3.0 | 2026-06-14 | Added `CVIB`, completing the Wave 1 valuation lane with DCF, per-share, and comparable-multiple checks. |
 | v0.2.0 | 2026-06-13 | Added source registry, publication evidence contract, and event-driven monitoring examples. |

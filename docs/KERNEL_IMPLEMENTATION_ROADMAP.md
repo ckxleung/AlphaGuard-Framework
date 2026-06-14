@@ -16,8 +16,8 @@ canonical module appears here with the same status as the immutable manifest.
 
 - Monitored universe: 56 tickers in `config/target_enterprises.json`.
 - Architecture coverage: 18 canonical modules across four functional layers.
-- Production auditors live: 8.
-- Specified auditors awaiting implementation: 10.
+- Production auditors live: 9.
+- Specified auditors awaiting implementation: 9.
 - Shared runtime contract: `BaseAuditor.execute_audit(ai_output, ground_truth)`.
 - Publication contract: Markdown report plus JSON sidecar validated by
   `src/output_standard.py`.
@@ -31,7 +31,7 @@ canonical module appears here with the same status as the immutable manifest.
 | 03 | AMDG | layer_4_strategy | SPECIFIED | Wave 4 | Render-inspection fixtures for institutional deliverables |
 | 04 | CASS | layer_4_strategy | SPECIFIED | Wave 5 | Persona constraint matrix and conflict-resolution fixtures |
 | 05 | SFRA | layer_1_telemetry | SPECIFIED | Wave 2 | SEC footnote retrieval fixtures with coordinate citations |
-| 06 | TLAB | layer_1_telemetry | SPECIFIED | Wave 2 | Versioned API schema and execution-trace fixtures |
+| 06 | TLAB | layer_1_telemetry | IMPLEMENTED | Live | Versioned API schema, generated-code, execution-trace, and CLI tests passed |
 | 07 | BLSB | layer_4_strategy | SPECIFIED | Wave 5 | Strategy claim-evidence mapping and actionability fixtures |
 | 08 | FOAS | layer_3_compliance | IMPLEMENTED | Live | Cent-level ledger, trial-balance, adjustment traceability, and CLI tests passed |
 | 09 | FITV | layer_2_valuation | IMPLEMENTED | Live | Bond price, duration, DV01, convention, and CLI tests passed |
@@ -62,12 +62,13 @@ readers because it produces deterministic finance math that is easy to inspect.
 
 ### Wave 2: Daily Infrastructure Credibility
 
-`FOAS` is now implemented. Promote `TLAB` and `SFRA` next to add API-contract
-checking and long-context filing evidence to the daily telemetry loop:
+`FOAS` and `TLAB` are now implemented. Promote `SFRA` next to add long-context
+filing evidence to the daily telemetry loop:
 
 - `Module_08_FOAS`: implemented ledger, trial-balance, and adjustment
   reconciliation;
-- `Module_06_TLAB`: API schema, generated-code, and tool-trace validation;
+- `Module_06_TLAB`: implemented API schema, generated-code, and tool-trace
+  validation;
 - `Module_05_SFRA`: SEC footnote retrieval and citation integrity.
 
 Wave 2 turns AlphaGuard from a valuation demo into a daily operating system for

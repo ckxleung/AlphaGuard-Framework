@@ -225,7 +225,7 @@ class ManifestIntegrationTests(unittest.TestCase):
         with self.assertRaises(KeyError):
             get_module_spec(99)
 
-    def test_main_pipeline_executes_all_eight_completed_kernels(self) -> None:
+    def test_main_pipeline_executes_all_nine_completed_kernels(self) -> None:
         from src.main_pipeline import run_pipeline
 
         safety_stock = 1.65 * math.sqrt(10 * 20**2 + 100**2 * 2**2)
@@ -244,8 +244,61 @@ class ManifestIntegrationTests(unittest.TestCase):
         )
         equity_value = enterprise_value - 50.0
         price_per_share = equity_value / 10.0
+        generated_code = '''
+import time
+import requests
+
+API_VERSION = "2026-06-01"
+
+def run_client(api_key, user_input):
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        "X-API-Version": API_VERSION,
+    }
+    payload = {"model": "gpt-5.4", "input": user_input}
+    for attempt in range(3):
+        try:
+            response = requests.post(
+                "https://api.vendor.example/v1/responses",
+                headers=headers,
+                json=payload,
+                timeout=30,
+            )
+            if response.status_code == 429:
+                time.sleep(int(response.headers.get("Retry-After", "1")))
+                continue
+            response.raise_for_status()
+            return response.json()["output_text"]
+        except requests.RequestException:
+            if attempt == 2:
+                raise
+            time.sleep(1)
+'''
         report = run_pipeline(
             {
+                "generated_code": generated_code,
+                "declared_api_version": "2026-06-01",
+                "execution_trace": [
+                    {
+                        "step_id": "extract",
+                        "tool_name": "extract_filing",
+                        "status": "SUCCESS",
+                        "output": {"filing_id": "10-K-001"},
+                    },
+                    {
+                        "step_id": "search",
+                        "tool_name": "search_filings",
+                        "status": "SUCCESS",
+                        "output": {"matches": ["note-7"]},
+                    },
+                    {
+                        "step_id": "calculate",
+                        "tool_name": "calculate_metric",
+                        "status": "SUCCESS",
+                        "output": {"metric_value": 42.0004},
+                    },
+                ],
                 "revenue_forecast": [400.0, 450.0, 500.0, 550.0, 600.0],
                 "reported_operating_cash_flow": 5_080_000_000,
                 "calculated_enterprise_value": 168_000_000_000,
@@ -306,6 +359,46 @@ class ManifestIntegrationTests(unittest.TestCase):
                 "coupon_frequency": 2,
             },
             {
+                "api_schema": {
+                    "api_version": "2026-06-01",
+                    "endpoint": "/v1/responses",
+                    "method": "POST",
+                    "required_payload_fields": ["model", "input"],
+                    "required_response_fields": ["output_text"],
+                },
+                "breaking_change_manifest": {
+                    "deprecated_versions": ["2025-01-01"],
+                    "removed_endpoints": ["/v1/completions"],
+                },
+                "required_headers": [
+                    "Authorization",
+                    "Content-Type",
+                    "X-API-Version",
+                ],
+                "rate_limit_policy": {
+                    "requires_429_retry": True,
+                    "retry_after_header": "Retry-After",
+                    "min_retry_attempts": 3,
+                },
+                "mandatory_tool_steps": [
+                    {
+                        "step_id": "extract",
+                        "tool_name": "extract_filing",
+                        "required_output_keys": ["filing_id"],
+                    },
+                    {
+                        "step_id": "search",
+                        "tool_name": "search_filings",
+                        "required_output_keys": ["matches"],
+                    },
+                    {
+                        "step_id": "calculate",
+                        "tool_name": "calculate_metric",
+                        "required_output_keys": ["metric_value"],
+                        "expected_numeric_output": 42.0,
+                        "numeric_tolerance": 0.001,
+                    },
+                ],
                 "current_capacity": 100.0,
                 "capex_additions": [10.0, 10.0, 10.0, 10.0, 10.0],
                 "capital_efficiency": 2.0,
@@ -450,10 +543,20 @@ class ManifestIntegrationTests(unittest.TestCase):
             },
         )
 
-        self.assertEqual(report["executed_modules"], 8)
+        self.assertEqual(report["executed_modules"], 9)
         self.assertEqual(
             set(report["results"]),
-            {"FOAS", "FITV", "CVIB", "IRTA", "BMAE", "CFIA", "SCGV", "IBDV"},
+            {
+                "TLAB",
+                "FOAS",
+                "FITV",
+                "CVIB",
+                "IRTA",
+                "BMAE",
+                "CFIA",
+                "SCGV",
+                "IBDV",
+            },
         )
         self.assertTrue(
             all(

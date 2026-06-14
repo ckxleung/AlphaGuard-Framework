@@ -190,6 +190,29 @@ class TelemetryRouterTests(unittest.TestCase):
             ["Module_17_ERCA", "Module_01_FRTE"],
         )
 
+    def test_layer_one_smoke_executes_tlab_after_implementation(self) -> None:
+        from datetime import datetime, timezone
+
+        from src.main_pipeline import run_daily_smoke
+
+        report = run_daily_smoke(
+            "MSFT",
+            observed_at=datetime(2026, 6, 14, 16, 0, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(
+            report["routing_specs"]["target_infrastructure_layer"],
+            "Layer_1_Technical_Telemetry",
+        )
+        self.assertIn(
+            "Module_06_TLAB",
+            [scorecard["kernel_id"] for scorecard in report["forensic_audit_scorecard"]],
+        )
+        self.assertEqual(
+            report["unavailable_kernels"],
+            ["Module_05_SFRA", "Module_10_OAPE"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

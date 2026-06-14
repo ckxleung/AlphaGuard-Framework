@@ -65,8 +65,8 @@ class MonitoringPolicyTests(unittest.TestCase):
             plan["target_infrastructure_layer"],
             "Layer_1_Technical_Telemetry",
         )
-        self.assertEqual(plan["executable_modules"], ["BMAE"])
-        self.assertEqual(plan["unavailable_modules"], ["TLAB"])
+        self.assertEqual(plan["executable_modules"], ["TLAB", "BMAE"])
+        self.assertEqual(plan["unavailable_modules"], [])
         self.assertFalse(plan["publication_eligible"])
 
     def test_event_peak_selects_between_three_and_five_modules(self) -> None:
