@@ -3,6 +3,17 @@
 All notable AlphaGuard Framework changes are recorded here. The project follows
 human-readable milestone versions until public package releases begin.
 
+## v0.7.0 - 2026-06-16
+
+- Completed the full 18-kernel implementation baseline across telemetry,
+  valuation, compliance, and strategy layers.
+- Promoted `FRTE`, `APAC`, `AMDG`, `CASS`, `BLSB`, `OAPE`, `AMWE`, and `ERCA`
+  to production auditors with deterministic tests and manifest registration.
+- Updated the institutional gate expectation: downstream publication systems
+  must fail closed when AlphaGuard repository validation, kernel execution, or
+  machine-readable sidecar validation fails.
+- Verified 188 unit and contract tests across all production auditors.
+
 ## v0.6.0 - 2026-06-14
 
 - Added `Module_05_SFRA` as a production auditor.

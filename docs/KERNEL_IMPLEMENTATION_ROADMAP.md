@@ -77,18 +77,18 @@ auditable AI output.
 
 ### Wave 3: Forensic Evidence Expansion
 
-Promote `FRTE` and `AMWE` once ingestion fixtures exist. `OAPE` has been
-promoted to `IMPLEMENTED` and is now Live:
+Wave 3 is now complete. `FRTE`, `OAPE`, and `AMWE` have been promoted to
+`IMPLEMENTED` and are now Live:
 
 - `Module_01_FRTE`: filing risk-delta omissions and invented changes;
-- ~~`Module_10_OAPE`~~: **IMPLEMENTED** — office artifact structural and
+- `Module_10_OAPE`: office artifact structural and
   rendered-layout defect evaluation with deterministic pairwise scoring;
 - `Module_16_AMWE`: temporal leakage and invalid model-validation splits.
 
 ### Wave 4: Enterprise and Cross-Market Controls
 
-Promote `APAC`, `AMDG`, and `ERCA` after the framework has stable evidence
-adapters:
+Wave 4 is now complete. `APAC`, `AMDG`, and `ERCA` provide cross-market,
+institutional deliverable, and enterprise-control coverage:
 
 - `Module_02_APAC`: cross-market operating, options, and regulatory contagion;
 - `Module_03_AMDG`: institutional deliverable numerical and visual discipline;
@@ -96,8 +96,8 @@ adapters:
 
 ### Wave 5: Strategy Sandbox Completion
 
-Promote `CASS` and `BLSB` last because they require richer qualitative fixtures
-and higher reviewer judgment:
+Wave 5 is now complete. `CASS` and `BLSB` close the qualitative strategy
+sandbox lane:
 
 - `Module_04_CASS`: stakeholder-conflict strategy resolution;
 - `Module_07_BLSB`: GTM strategy grounding, actionability, and downside control.
